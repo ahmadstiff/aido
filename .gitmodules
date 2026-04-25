@@ -1,0 +1,3 @@
+[submodule "aido-contract/lib/openzeppelin-contracts"]
+	path = aido-contract/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
