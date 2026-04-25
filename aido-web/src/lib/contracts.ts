@@ -145,6 +145,11 @@ export const aidoGovernorAbi = [
     inputs: [], outputs: [{ type: "uint256" }],
   },
   {
+    type: "function", name: "quorum", stateMutability: "view",
+    inputs: [{ name: "timepoint", type: "uint256" }],
+    outputs: [{ type: "uint256" }],
+  },
+  {
     type: "function", name: "state", stateMutability: "view",
     inputs: [{ name: "proposalId", type: "uint256" }],
     outputs: [{ type: "uint8" }],
@@ -287,6 +292,11 @@ export const monadVoterRegistryAbi = [
     inputs: [], outputs: [{ type: "uint256" }],
   },
   {
+    type: "function", name: "registeredUsers", stateMutability: "view",
+    inputs: [{ name: "", type: "uint256" }],
+    outputs: [{ type: "address" }],
+  },
+  {
     type: "function", name: "setConfig", stateMutability: "nonpayable",
     inputs: [
       { name: "_risk", type: "uint8" },
@@ -323,6 +333,9 @@ export const monadVoterRegistryAbi = [
       { name: "reason", type: "string", indexed: false },
     ],
   },
+  { type: "error", name: "NotAuthorizedAgent", inputs: [] },
+  { type: "error", name: "AutoPilotDisabled", inputs: [] },
+  { type: "error", name: "ZeroAddress", inputs: [] },
 ] as const;
 
 // ─── AidoDaoFactory ABI ───

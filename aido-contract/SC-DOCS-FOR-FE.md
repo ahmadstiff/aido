@@ -10,9 +10,14 @@
 
 ```ts
 export const CONTRACTS = {
-  AIDO_TOKEN: "0xAb0B7eB85F36979DAc40C31C5B37E9fB624C4456",           // AidoToken (ERC20Votes)
-  AIDO_GOVERNOR: "0xBDf0868adFA79d88381903a9FDf82B2Ed4c15237",        // AidoGovernor
-  MONAD_VOTER_REGISTRY: "0x1E9759aC11e4B5b4e39FC9Cda49364fb2ADee7FC", // MonadVoterRegistry
+  // Core
+  AIDO_TOKEN: "0x8a2CF47167EBC346d88B29c69d6C384945B3f63f",           // AidoToken (ERC20Votes + Faucet + Mint)
+  AIDO_GOVERNOR: "0x5D5d646a5Fdc86f578aCB9cC8f42C91b0C7b647B",        // AidoGovernor
+  MONAD_VOTER_REGISTRY: "0x0F3752932c00F7cD471F183b419684D5BbdEA492", // MonadVoterRegistry
+  // Factory & Registry
+  AIDO_DAO_FACTORY: "0x19DfE2f666106E9eA84508FC37FA9725D2A187b6",     // AidoDaoFactory
+  AIDO_DAO_REGISTRY: "0xae4Ba05f50DD3080722fea59c8C9CBD4FE22127d",    // AidoDaoRegistry
+  TIMELOCK: "0xff512B03fCF978cD183d0635c4Be9FFd9e0647A9",             // AidoTimelock
 } as const;
 ```
 
@@ -20,99 +25,31 @@ export const CONTRACTS = {
 
 ## 1. AidoToken (ERC20Votes)
 
-Governance token. User harus `delegate()` dulu sebelum bisa voting.
+Governance token with built-in faucet and owner mint. User harus `delegate()` dulu sebelum bisa voting.
 
 ### ABI (minimal untuk FE)
 
 ```ts
 export const aidoTokenAbi = [
   // ── Read ──
-  {
-    type: "function",
-    name: "name",
-    stateMutability: "view",
-    inputs: [],
-    outputs: [{ type: "string" }],
-  },
-  {
-    type: "function",
-    name: "symbol",
-    stateMutability: "view",
-    inputs: [],
-    outputs: [{ type: "string" }],
-  },
-  {
-    type: "function",
-    name: "decimals",
-    stateMutability: "view",
-    inputs: [],
-    outputs: [{ type: "uint8" }],
-  },
-  {
-    type: "function",
-    name: "totalSupply",
-    stateMutability: "view",
-    inputs: [],
-    outputs: [{ type: "uint256" }],
-  },
-  {
-    type: "function",
-    name: "balanceOf",
-    stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
-    outputs: [{ type: "uint256" }],
-  },
-  {
-    type: "function",
-    name: "getVotes",
-    stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
-    outputs: [{ type: "uint256" }],
-  },
-  {
-    type: "function",
-    name: "delegates",
-    stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
-    outputs: [{ type: "address" }],
-  },
+  { type: "function", name: "name", stateMutability: "view", inputs: [], outputs: [{ type: "string" }] },
+  { type: "function", name: "symbol", stateMutability: "view", inputs: [], outputs: [{ type: "string" }] },
+  { type: "function", name: "decimals", stateMutability: "view", inputs: [], outputs: [{ type: "uint8" }] },
+  { type: "function", name: "totalSupply", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "balanceOf", stateMutability: "view", inputs: [{ name: "account", type: "address" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "getVotes", stateMutability: "view", inputs: [{ name: "account", type: "address" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "delegates", stateMutability: "view", inputs: [{ name: "account", type: "address" }], outputs: [{ type: "address" }] },
+  { type: "function", name: "owner", stateMutability: "view", inputs: [], outputs: [{ type: "address" }] },
+  { type: "function", name: "hasClaimed", stateMutability: "view", inputs: [{ name: "", type: "address" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "FAUCET_AMOUNT", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
   // ── Write ──
-  {
-    type: "function",
-    name: "delegate",
-    stateMutability: "nonpayable",
-    inputs: [{ name: "delegatee", type: "address" }],
-    outputs: [],
-  },
-  {
-    type: "function",
-    name: "transfer",
-    stateMutability: "nonpayable",
-    inputs: [
-      { name: "to", type: "address" },
-      { name: "value", type: "uint256" },
-    ],
-    outputs: [{ type: "bool" }],
-  },
+  { type: "function", name: "delegate", stateMutability: "nonpayable", inputs: [{ name: "delegatee", type: "address" }], outputs: [] },
+  { type: "function", name: "transfer", stateMutability: "nonpayable", inputs: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "faucet", stateMutability: "nonpayable", inputs: [], outputs: [] },
+  { type: "function", name: "mint", stateMutability: "nonpayable", inputs: [{ name: "to", type: "address" }, { name: "amount", type: "uint256" }], outputs: [] },
   // ── Events ──
-  {
-    type: "event",
-    name: "DelegateChanged",
-    inputs: [
-      { name: "delegator", type: "address", indexed: true },
-      { name: "fromDelegate", type: "address", indexed: true },
-      { name: "toDelegate", type: "address", indexed: true },
-    ],
-  },
-  {
-    type: "event",
-    name: "Transfer",
-    inputs: [
-      { name: "from", type: "address", indexed: true },
-      { name: "to", type: "address", indexed: true },
-      { name: "value", type: "uint256", indexed: false },
-    ],
-  },
+  { type: "event", name: "DelegateChanged", inputs: [{ name: "delegator", type: "address", indexed: true }, { name: "fromDelegate", type: "address", indexed: true }, { name: "toDelegate", type: "address", indexed: true }] },
+  { type: "event", name: "Transfer", inputs: [{ name: "from", type: "address", indexed: true }, { name: "to", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }] },
 ] as const;
 ```
 
@@ -123,8 +60,13 @@ export const aidoTokenAbi = [
 | `balanceOf(address)` | Read | Tampilkan saldo token user |
 | `getVotes(address)` | Read | Tampilkan voting power aktif |
 | `delegates(address)` | Read | Cek ke siapa user delegate |
+| `owner()` | Read | Cek apakah user adalah token owner (untuk mint) |
+| `hasClaimed(address)` | Read | Cek apakah user sudah claim faucet |
+| `FAUCET_AMOUNT()` | Read | Jumlah token yang bisa di-claim dari faucet |
 | `delegate(address)` | Write | User delegate ke diri sendiri atau agent |
 | `transfer(to, amount)` | Write | Transfer token ke user lain |
+| `faucet()` | Write | Claim token gratis (sekali per wallet) |
+| `mint(to, amount)` | Write | Owner mint token ke address tertentu |
 
 ### Penting: Delegation
 
@@ -136,15 +78,27 @@ await writeContract({
   address: CONTRACTS.AIDO_TOKEN,
   abi: aidoTokenAbi,
   functionName: "delegate",
-  args: [userAddress], // delegate ke diri sendiri
+  args: [userAddress],
 });
+```
 
-// Atau delegate ke AI agent
+### Faucet & Mint
+
+```ts
+// Claim faucet (10,000 AIDO, sekali per wallet)
 await writeContract({
   address: CONTRACTS.AIDO_TOKEN,
   abi: aidoTokenAbi,
-  functionName: "delegate",
-  args: [agentAddress], // delegate ke agent
+  functionName: "faucet",
+  args: [],
+});
+
+// Owner-only: mint token ke address tertentu
+await writeContract({
+  address: CONTRACTS.AIDO_TOKEN,
+  abi: aidoTokenAbi,
+  functionName: "mint",
+  args: [recipientAddress, parseEther("10000")],
 });
 ```
 
@@ -579,7 +533,7 @@ const config = await readContract({
 
 ```
 1. User connect wallet
-2. User receive/claim AIDO token (dari faucet atau transfer)
+2. User claim AIDO token via faucet() → 10,000 AIDO (sekali per wallet)
 3. User call AidoToken.delegate(userAddress)  ← WAJIB, aktifkan voting power
 4. User call MonadVoterRegistry.setConfig(risk, autoPilot, agentAddress)
 ```
@@ -676,6 +630,69 @@ useWatchContractEvent({
 
 ---
 
+## 4. AidoDaoFactory
+
+Factory untuk membuat DAO baru melalui AIDO platform.
+
+### ABI
+
+```ts
+export const aidoDaoFactoryAbi = [
+  { type: "function", name: "createDao", stateMutability: "nonpayable",
+    inputs: [
+      { name: "name", type: "string" }, { name: "token", type: "address" },
+      { name: "votingDelay", type: "uint48" }, { name: "votingPeriod", type: "uint32" },
+      { name: "proposalThreshold", type: "uint256" }, { name: "quorumNumerator", type: "uint256" },
+      { name: "initialOwner", type: "address" }, { name: "metadataURI", type: "string" },
+    ],
+    outputs: [{ name: "governor", type: "address" }, { name: "timelock", type: "address" }],
+  },
+  { type: "function", name: "registry", stateMutability: "view", inputs: [], outputs: [{ type: "address" }] },
+  { type: "function", name: "paused", stateMutability: "view", inputs: [], outputs: [{ type: "bool" }] },
+  { type: "event", name: "DaoCreated", inputs: [
+    { name: "creator", type: "address", indexed: true }, { name: "governor", type: "address", indexed: true },
+    { name: "timelock", type: "address", indexed: true }, { name: "token", type: "address", indexed: false },
+    { name: "name", type: "string", indexed: false }, { name: "metadataURI", type: "string", indexed: false },
+  ]},
+] as const;
+```
+
+---
+
+## 5. AidoDaoRegistry
+
+Registry untuk menyimpan dan query semua DAO yang dibuat via factory.
+
+### ABI
+
+```ts
+export const aidoDaoRegistryAbi = [
+  { type: "function", name: "isRegisteredDao", stateMutability: "view",
+    inputs: [{ name: "governor", type: "address" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "getDao", stateMutability: "view",
+    inputs: [{ name: "governor", type: "address" }],
+    outputs: [{ type: "tuple", components: [
+      { name: "exists", type: "bool" }, { name: "governor", type: "address" },
+      { name: "timelock", type: "address" }, { name: "token", type: "address" },
+      { name: "creator", type: "address" }, { name: "name", type: "string" },
+      { name: "metadataURI", type: "string" }, { name: "createdAt", type: "uint64" },
+    ]}],
+  },
+  { type: "function", name: "daoCount", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "listDaos", stateMutability: "view",
+    inputs: [{ name: "offset", type: "uint256" }, { name: "limit", type: "uint256" }],
+    outputs: [{ name: "governors", type: "address[]" }],
+  },
+  { type: "event", name: "DaoRegistered", inputs: [
+    { name: "governor", type: "address", indexed: true }, { name: "creator", type: "address", indexed: true },
+    { name: "token", type: "address", indexed: false }, { name: "name", type: "string", indexed: false },
+    { name: "metadataURI", type: "string", indexed: false },
+  ]},
+] as const;
+```
+
+---
+
 ## Catatan Penting
 
 1. **Delegation harus dilakukan sebelum vote.** Jika user belum `delegate()`, voting power = 0 meskipun punya token.
@@ -683,3 +700,5 @@ useWatchContractEvent({
 3. **Agent vote melalui Registry**, bukan langsung ke Governor. Ini supaya ada access control (cek autoPilot + authorized agent).
 4. **Semua amount dalam 18 decimals.** `1 AIDO = 1000000000000000000` (1e18).
 5. **Proposal ID bisa di-compute di FE** menggunakan `hashProposal(targets, values, calldatas, keccak256(description))`.
+6. **Faucet** hanya bisa di-claim sekali per wallet. Jumlah: 10,000 AIDO.
+7. **Mint** hanya bisa dilakukan oleh token owner.
