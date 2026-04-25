@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import ContextProvider from "@/context";
 import Navbar from "@/components/navbar";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrains = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "AIDO",
-  description: "AIDO - Monad dApp",
+  title: "AIDO — AI Governance Agent",
+  description: "AI-Powered Governance Agent for Monad",
 };
 
 export default async function RootLayout({
@@ -32,9 +33,9 @@ export default async function RootLayout({
     <html
       suppressHydrationWarning
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-[#F8F7F4]">
         <ContextProvider cookies={cookies}>
           <Navbar />
           <main className="flex-1">{children}</main>
