@@ -33,7 +33,7 @@ export default function CreateProposalPage() {
   if (!isConnected) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <p className="text-[#8C8680]">Connect your wallet to create a proposal.</p>
+        <p className="text-[#4F4862]">Connect your wallet to create a proposal.</p>
       </div>
     );
   }
@@ -45,7 +45,7 @@ export default function CreateProposalPage() {
           <span className="text-xl">✓</span>
         </div>
         <h1 className="text-2xl font-extrabold text-emerald-600">Proposal Created!</h1>
-        <p className="mt-2 text-sm text-[#8C8680]">Your proposal is now live for voting.</p>
+        <p className="mt-2 text-sm text-[#4F4862]">Your proposal is now live for voting.</p>
         <button
           onClick={() => router.push("/proposals")}
           className="mt-6 rounded-xl bg-[#6C5CE7] px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-[#6C5CE7]/20 hover:bg-[#5B4FDB] transition-all"
@@ -58,24 +58,24 @@ export default function CreateProposalPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 py-10">
-      <h1 className="text-2xl font-extrabold text-[#1A1613]">Create Proposal</h1>
-      <p className="mt-0.5 text-sm text-[#8C8680]">Submit a new governance proposal for voting</p>
+      <h1 className="text-2xl font-extrabold text-[#1A1625]">Create Proposal</h1>
+      <p className="mt-0.5 text-sm text-[#4F4862]">Submit a new governance proposal for voting</p>
 
-      <div className="mt-8 rounded-2xl bg-white border border-[#E2DFD9] p-6 shadow-sm">
+      <div className="mt-8 rounded-2xl bg-white border border-[#DEDCE6] p-6 shadow-sm">
         <div>
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">Proposal Description</label>
+          <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">Proposal Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Describe your proposal... e.g. 'Allocate 50,000 MON to marketing wallet'"
             rows={4}
-            className="mt-1.5 w-full rounded-xl border border-[#E2DFD9] bg-[#F8F7F4] px-4 py-3 text-sm text-[#1A1613] placeholder:text-[#C4BFB8] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all resize-none"
+            className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F8F7F4] px-4 py-3 text-sm text-[#1A1625] placeholder:text-[#C4BFB8] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all resize-none"
           />
         </div>
 
-        <div className="mt-4 rounded-xl bg-[#F0EEEB] p-3">
-          <p className="text-xs text-[#8C8680]">
-            <strong className="text-[#1A1613]">Voting info:</strong> 1 block delay · 50 blocks voting period (~50s on Monad) · 4% quorum
+        <div className="mt-4 rounded-xl bg-[#EEEDF4] p-3">
+          <p className="text-xs text-[#4F4862]">
+            <strong className="text-[#1A1625]">Voting info:</strong> 1 block delay · 50 blocks voting period (~50s on Monad) · 4% quorum
           </p>
         </div>
 

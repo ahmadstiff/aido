@@ -70,39 +70,39 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">Proposal ID</p>
-          <p className="mt-1 text-[11px] font-mono text-[#8C8680] break-all">{id}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">Proposal ID</p>
+          <p className="mt-1 text-[11px] font-mono text-[#4F4862] break-all">{id}</p>
         </div>
         <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-          isActive ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-[#F0EEEB] text-[#8C8680]"
+          isActive ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-[#F0EEEB] text-[#4F4862]"
         }`}>
           {stateLabel}
         </span>
       </div>
 
       {proposer && (
-        <p className="mt-4 text-sm text-[#8C8680]">
-          Proposed by: <code className="rounded-md bg-[#F0EEEB] px-1.5 py-0.5 font-mono text-[11px] text-[#1A1613]">{proposer}</code>
+        <p className="mt-4 text-sm text-[#4F4862]">
+          Proposed by: <code className="rounded-md bg-[#F0EEEB] px-1.5 py-0.5 font-mono text-[11px] text-[#1A1625]">{proposer}</code>
         </p>
       )}
       {deadline && (
-        <p className="text-sm text-[#8C8680]">
+        <p className="text-sm text-[#4F4862]">
           Deadline block: {deadline.toString()}
         </p>
       )}
 
       {/* Vote Counts */}
-      <div className="mt-6 rounded-2xl bg-white border border-[#E2DFD9] p-6 shadow-sm">
+      <div className="mt-6 rounded-2xl bg-white border border-[#DEDCE6] p-6 shadow-sm">
         <div className="flex items-center gap-2">
           <IconChart className="w-4 h-4 text-[#6C5CE7]" />
-          <h2 className="text-base font-bold text-[#1A1613]">Vote Results</h2>
+          <h2 className="text-base font-bold text-[#1A1625]">Vote Results</h2>
         </div>
         <div className="mt-5 space-y-4">
           <VoteBar label="For" votes={forVotes} total={totalVotes} color="bg-emerald-500" />
           <VoteBar label="Against" votes={againstVotes} total={totalVotes} color="bg-red-400" />
           <VoteBar label="Abstain" votes={abstainVotes} total={totalVotes} color="bg-[#C4BFB8]" />
         </div>
-        <p className="mt-4 text-xs text-[#8C8680]">
+        <p className="mt-4 text-xs text-[#4F4862]">
           Total votes: {totalVotes.toLocaleString()} AIDO
         </p>
       </div>
@@ -125,8 +125,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
       {/* Vote Buttons */}
       {isConnected && isActive && !hasVoted && (
-        <div className="mt-4 rounded-2xl bg-white border border-[#E2DFD9] p-6 shadow-sm">
-          <h2 className="text-base font-bold text-[#1A1613]">Cast Your Vote</h2>
+        <div className="mt-4 rounded-2xl bg-white border border-[#DEDCE6] p-6 shadow-sm">
+          <h2 className="text-base font-bold text-[#1A1625]">Cast Your Vote</h2>
           <div className="mt-4 flex gap-3">
             <button
               onClick={() => handleVote(1)}
@@ -145,7 +145,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             <button
               onClick={() => handleVote(2)}
               disabled={isPending}
-              className="flex-1 rounded-xl border border-[#E2DFD9] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1613] hover:bg-[#F0EEEB] transition-all disabled:opacity-40"
+              className="flex-1 rounded-xl border border-[#DEDCE6] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1625] hover:bg-[#F0EEEB] transition-all disabled:opacity-40"
             >
               {isPending ? "..." : <><IconAbstain className="w-4 h-4 inline mr-1.5" />Abstain</>}
             </button>
@@ -170,8 +170,8 @@ function VoteBar({ label, votes, total, color }: { label: string; votes: number;
   return (
     <div>
       <div className="flex justify-between text-sm">
-        <span className="font-medium text-[#1A1613]">{label}</span>
-        <span className="text-[#8C8680]">{votes.toLocaleString()} ({pct.toFixed(1)}%)</span>
+        <span className="font-medium text-[#1A1625]">{label}</span>
+        <span className="text-[#4F4862]">{votes.toLocaleString()} ({pct.toFixed(1)}%)</span>
       </div>
       <div className="mt-1.5 h-2 rounded-full bg-[#F0EEEB]">
         <div className={`h-2 rounded-full ${color} transition-all`} style={{ width: `${pct}%` }} />

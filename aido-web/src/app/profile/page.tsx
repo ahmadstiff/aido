@@ -231,8 +231,8 @@ export default function ProfilePage() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6C5CE7]/10">
             <IconShield className="h-7 w-7 text-[#6C5CE7]" />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#1A1613]">Profile</h1>
-          <p className="mt-2 text-sm leading-relaxed text-[#8C8680]">
+          <h1 className="text-2xl font-extrabold text-[#1A1625]">Profile</h1>
+          <p className="mt-2 text-sm leading-relaxed text-[#4F4862]">
             Connect your wallet to claim tokens, delegate voting power, and configure your AI agent.
           </p>
           <div className="mt-6 flex justify-center">
@@ -247,13 +247,13 @@ export default function ProfilePage() {
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#1A1613]">Governance Profile</h1>
-          <p className="mt-0.5 text-sm text-[#8C8680]">
+          <h1 className="text-2xl font-extrabold text-[#1A1625]">Governance Profile</h1>
+          <p className="mt-0.5 text-sm text-[#4F4862]">
             Onboard your wallet, activate voting power, and configure your AI agent.
           </p>
         </div>
-        <div className="rounded-xl border border-[#E2DFD9] bg-white px-3 py-2 text-xs text-[#8C8680]">
-          Wallet: <span className="font-mono text-[#1A1613]">{shortAddress(address)}</span>
+        <div className="rounded-xl border border-[#DEDCE6] bg-white px-3 py-2 text-xs text-[#4F4862]">
+          Wallet: <span className="font-mono text-[#1A1625]">{shortAddress(address)}</span>
         </div>
       </div>
 
@@ -275,21 +275,21 @@ export default function ProfilePage() {
           title="Voting Power"
           value={votes ? Number(formatEther(votes)).toLocaleString() : "0"}
           subtitle={isSelfDelegated ? "active for manual voting" : "delegation required"}
-          icon={<IconVotePower className="h-4 w-4 text-[#D97706]" />}
+          icon={<IconVotePower className="h-4 w-4 text-[#6C5CE7]" />}
           tone="amber"
         />
         <SummaryCard
           title="Faucet"
           value={hasClaimed ? "Claimed" : formatEther(faucetAmount ?? 0n)}
           subtitle={hasClaimed ? "already used" : "AIDO available to claim"}
-          icon={<IconSparkle className="h-4 w-4 text-[#059669]" />}
+          icon={<IconSparkle className="h-4 w-4 text-[#6C5CE7]" />}
           tone="emerald"
         />
         <SummaryCard
           title="Agent Users"
           value={registeredUsersCount?.toString() ?? "0"}
           subtitle={hasAgentConfigured ? "this wallet is registered" : "this wallet is not registered"}
-          icon={<IconAgent className="h-4 w-4 text-[#0284C7]" />}
+          icon={<IconAgent className="h-4 w-4 text-[#6C5CE7]" />}
           tone="sky"
         />
       </div>
@@ -304,22 +304,22 @@ export default function ProfilePage() {
           >
             <div className="flex items-center gap-2">
               <IconShield className="h-4 w-4 text-[#6C5CE7]" />
-              <h2 className="text-base font-bold text-[#1A1613]">Onboarding Status</h2>
+              <h2 className="text-base font-bold text-[#1A1625]">Onboarding Status</h2>
             </div>
             <div className="mt-5 space-y-3">
               {onboardingSteps.map((step) => (
                 <div
                   key={step.label}
-                  className="flex items-start gap-3 rounded-xl border border-[#F0EEEB] bg-[#FAF9F7] px-4 py-3"
+                  className="flex items-start gap-3 rounded-xl border border-[#EEEDF4] bg-[#F8F7FC] px-4 py-3"
                 >
                   <div
                     className={`mt-0.5 h-2.5 w-2.5 rounded-full ${
-                      step.done ? "bg-emerald-500" : "bg-[#D8D3CB]"
+                      step.done ? "bg-emerald-500" : "bg-[#D0CDD8]"
                     }`}
                   />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-[#1A1613]">{step.label}</p>
-                    <p className="mt-0.5 text-xs text-[#8C8680]">{step.hint}</p>
+                    <p className="text-sm font-semibold text-[#1A1625]">{step.label}</p>
+                    <p className="mt-0.5 text-xs text-[#4F4862]">{step.hint}</p>
                   </div>
                 </div>
               ))}
@@ -334,16 +334,16 @@ export default function ProfilePage() {
           >
             <div className="flex items-center gap-2">
               <IconDelegate className="h-4 w-4 text-[#6C5CE7]" />
-              <h2 className="text-base font-bold text-[#1A1613]">Token Actions</h2>
+              <h2 className="text-base font-bold text-[#1A1625]">Token Actions</h2>
             </div>
-            <p className="mt-1.5 text-sm leading-relaxed text-[#8C8680]">
+            <p className="mt-1.5 text-sm leading-relaxed text-[#4F4862]">
               Claim tokens first, then delegate to activate your voting power.
             </p>
 
-            <div className="mt-4 rounded-xl bg-[#F8F7F4] px-4 py-3 text-sm">
+            <div className="mt-4 rounded-xl bg-[#F5F3FA] px-4 py-3 text-sm">
               <div className="flex justify-between gap-3">
-                <span className="text-[#8C8680]">Current delegate</span>
-                <span className="font-mono text-[#1A1613]">
+                <span className="text-[#4F4862]">Current delegate</span>
+                <span className="font-mono text-[#1A1625]">
                   {currentDelegate && currentDelegate !== ZERO_ADDRESS
                     ? shortAddress(currentDelegate)
                     : "None"}
@@ -362,7 +362,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleDelegateSelf}
                 disabled={isPending || isSelfDelegated}
-                className="rounded-xl border border-[#E2DFD9] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1613] transition-all hover:bg-[#F0EEEB] disabled:opacity-40"
+                className="rounded-xl border border-[#DEDCE6] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1625] transition-all hover:bg-[#EEEDF4] disabled:opacity-40"
               >
                 {isSelfDelegated ? "Self Delegated" : "Delegate to Self"}
               </button>
@@ -372,7 +372,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleDelegateAgent}
                 disabled={isPending || !agentAddress}
-                className="w-full rounded-xl border border-[#E2DFD9] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1613] transition-all hover:bg-[#F0EEEB] disabled:opacity-40"
+                className="w-full rounded-xl border border-[#DEDCE6] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1625] transition-all hover:bg-[#EEEDF4] disabled:opacity-40"
               >
                 Delegate to Agent Address
               </button>
@@ -389,11 +389,11 @@ export default function ProfilePage() {
           >
             <div className="flex items-center gap-2">
               <IconAgent className="h-4 w-4 text-[#6C5CE7]" />
-              <h2 className="text-base font-bold text-[#1A1613]">AI Agent Config</h2>
+              <h2 className="text-base font-bold text-[#1A1625]">AI Agent Config</h2>
             </div>
 
             <div className="mt-5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
                 Risk Profile
               </label>
               <div className="mt-2.5 flex flex-wrap gap-2">
@@ -404,7 +404,7 @@ export default function ProfilePage() {
                     className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
                       risk === i
                         ? "bg-[#6C5CE7] text-white shadow-sm shadow-[#6C5CE7]/20"
-                        : "border border-[#E2DFD9] text-[#1A1613] hover:bg-[#F0EEEB]"
+                        : "border border-[#DEDCE6] text-[#1A1625] hover:bg-[#EEEDF4]"
                     }`}
                   >
                     {label}
@@ -413,19 +413,19 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="mt-5 flex items-center justify-between rounded-xl bg-[#F8F7F4] px-4 py-3">
+            <div className="mt-5 flex items-center justify-between rounded-xl px-4 py-3">
               <div>
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
                   Auto-Pilot
                 </label>
-                <p className="mt-0.5 text-xs text-[#8C8680]">
+                <p className="mt-0.5 text-xs text-[#4F4862]">
                   The AI agent can vote automatically based on your risk profile.
                 </p>
               </div>
               <button
                 onClick={() => setAutoPilot(!autoPilot)}
                 className={`relative h-7 w-12 rounded-full transition-all ${
-                  autoPilot ? "bg-[#6C5CE7]" : "bg-[#E2DFD9]"
+                  autoPilot ? "bg-[#6C5CE7]" : "bg-[#DEDCE6]"
                 }`}
               >
                 <span
@@ -437,7 +437,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="mt-5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
                 Agent Address
               </label>
               <input
@@ -445,14 +445,14 @@ export default function ProfilePage() {
                 value={agentAddress}
                 onChange={(e) => setAgentAddress(e.target.value)}
                 placeholder="0x..."
-                className="mt-1.5 w-full rounded-xl border border-[#E2DFD9] bg-[#F8F7F4] px-4 py-2.5 text-sm font-mono text-[#1A1613] placeholder:text-[#C4BFB8] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
+                className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm font-mono text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
               />
             </div>
 
-            <div className="mt-5 rounded-xl bg-[#F8F7F4] px-4 py-3 text-sm">
+            <div className="mt-5 rounded-xl bg-[#F5F3FA] px-4 py-3 text-sm">
               <div className="flex justify-between gap-3">
-                <span className="text-[#8C8680]">Configured agent</span>
-                <span className="font-mono text-[#1A1613]">
+                <span className="text-[#4F4862]">Configured agent</span>
+                <span className="font-mono text-[#1A1625]">
                   {hasAgentConfigured ? shortAddress(userConfig?.delegatedAgent) : "None"}
                 </span>
               </div>
@@ -475,10 +475,10 @@ export default function ProfilePage() {
               contentClassName="p-6"
             >
               <div className="flex items-center gap-2">
-                <IconSparkle className="h-4 w-4 text-[#6C5CE7]" />
-                <h2 className="text-base font-bold text-[#1A1613]">Owner Mint Tools</h2>
+              <IconSparkle className="h-4 w-4 text-[#6C5CE7]" />
+              <h2 className="text-base font-bold text-[#1A1625]">Owner Mint Tools</h2>
               </div>
-              <p className="mt-1.5 text-sm text-[#8C8680]">
+              <p className="mt-1.5 text-sm text-[#4F4862]">
                 This wallet is the token owner, so it can mint AIDO to any address.
               </p>
 
@@ -488,7 +488,7 @@ export default function ProfilePage() {
                   value={mintRecipient}
                   onChange={(e) => setMintRecipient(e.target.value)}
                   placeholder="Recipient address"
-                  className="w-full rounded-xl border border-[#E2DFD9] bg-[#F8F7F4] px-4 py-2.5 text-sm font-mono text-[#1A1613] placeholder:text-[#C4BFB8] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
+                  className="w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm font-mono text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
                 />
                 <input
                   type="number"
@@ -496,7 +496,7 @@ export default function ProfilePage() {
                   value={mintAmount}
                   onChange={(e) => setMintAmount(e.target.value)}
                   placeholder="Amount"
-                  className="w-full rounded-xl border border-[#E2DFD9] bg-[#F8F7F4] px-4 py-2.5 text-sm text-[#1A1613] placeholder:text-[#C4BFB8] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
+                  className="w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
                 />
               </div>
 
@@ -529,10 +529,10 @@ function SummaryCard({
   tone: "violet" | "amber" | "emerald" | "sky";
 }) {
   const toneClasses = {
-    violet: "bg-[#EDE8FF]",
-    amber: "bg-[#FEF3E2]",
-    emerald: "bg-[#ECFAEF]",
-    sky: "bg-[#E8F4FB]",
+    violet: "bg-[#6C5CE7]/15",
+    amber: "bg-[#6C5CE7]/12",
+    emerald: "bg-[#6C5CE7]/10",
+    sky: "bg-[#6C5CE7]/10",
   };
 
   return (
@@ -543,13 +543,13 @@ function SummaryCard({
       contentClassName="p-6"
     >
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">{title}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#5C5670]">{title}</p>
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${toneClasses[tone]}`}>
           {icon}
         </div>
       </div>
-      <p className="mt-2 text-3xl font-extrabold text-[#1A1613]">{value}</p>
-      <p className="mt-1 text-xs text-[#8C8680]">{subtitle}</p>
+      <p className="mt-2 text-3xl font-extrabold text-[#1A1625]">{value}</p>
+      <p className="mt-1 text-xs text-[#4F4862]">{subtitle}</p>
     </DecoratedCard>
   );
 }

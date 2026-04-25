@@ -35,7 +35,7 @@ export default async function RootLayout({
       lang="en"
       className={`${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#F8F7F4]">
+      <body className="min-h-full flex flex-col">
         <ContextProvider cookies={cookies}>
           <Navbar />
           <main className="flex-1">{children}</main>
