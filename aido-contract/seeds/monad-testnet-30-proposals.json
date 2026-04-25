@@ -1,0 +1,499 @@
+{
+  "schemaVersion": 1,
+  "format": "governor-bravo-compatible-seed",
+  "chainId": 10143,
+  "network": "monad-testnet",
+  "governorAddressEnv": "DAO_GOVERNOR_ADDRESS",
+  "requiredTargetEnvs": [
+    "TREASURY_MODULE_ADDRESS",
+    "RISK_MODULE_ADDRESS",
+    "GOVERNANCE_MODULE_ADDRESS",
+    "OPERATIONS_MODULE_ADDRESS",
+    "EMISSIONS_MODULE_ADDRESS",
+    "GROWTH_MODULE_ADDRESS",
+    "PARTNERSHIPS_MODULE_ADDRESS"
+  ],
+  "notes": "Resolve $ENV placeholders before submitting. Encode each arguments[i] entry into calldatas[i]. Proposal IDs are computed by the governor onchain.",
+  "proposals": [
+    {
+      "proposalNumber": 1,
+      "seedKey": "treasury-q2-marketing-budget",
+      "title": "Set Q2 marketing budget ceiling",
+      "category": "treasury",
+      "description": "Summary: Set a hard treasury ceiling for Q2 marketing spend so growth campaigns stay budgeted and reviewable. Rationale: The DAO needs a fixed cap for content, paid acquisition, and co-marketing activity instead of approving open-ended spending. Implementation: Set MARKETING_BUDGET_Q2 to 25,000 tokens on the Treasury module.",
+      "targets": ["$TREASURY_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "MARKETING_BUDGET_Q2" },
+          { "type": "uint256", "value": "25000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 2,
+      "seedKey": "treasury-security-bounty-pool",
+      "title": "Increase bug bounty reserve",
+      "category": "treasury",
+      "description": "Summary: Expand the dedicated bug bounty reserve to improve security response readiness. Rationale: Security payouts should not compete with operating budgets after a critical disclosure. Implementation: Set BUG_BOUNTY_POOL to 10,000 tokens on the Treasury module.",
+      "targets": ["$TREASURY_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "BUG_BOUNTY_POOL" },
+          { "type": "uint256", "value": "10000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 3,
+      "seedKey": "treasury-ecosystem-grants-r1",
+      "title": "Create ecosystem grants round 1 pool",
+      "category": "treasury",
+      "description": "Summary: Open a dedicated grant pool for early ecosystem builders on Monad testnet. Rationale: Small grants help bootstrap integrations, dashboards, bots, and documentation without mixing those expenses into core treasury operations. Implementation: Set ECOSYSTEM_GRANTS_R1 to 50,000 tokens on the Treasury module.",
+      "targets": ["$TREASURY_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "ECOSYSTEM_GRANTS_R1" },
+          { "type": "uint256", "value": "50000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 4,
+      "seedKey": "treasury-runway-floor-policy",
+      "title": "Set treasury runway floor policy",
+      "category": "treasury",
+      "description": "Summary: Define a minimum treasury runway target so spending policy remains conservative during volatile periods. Rationale: The DAO should avoid approving new discretionary spending if runway drops below the agreed floor. Implementation: Set TREASURY_RUNWAY_FLOOR_MONTHS to 18 on the Treasury module.",
+      "targets": ["$TREASURY_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "TREASURY_RUNWAY_FLOOR_MONTHS" },
+          { "type": "uint256", "value": "18" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 5,
+      "seedKey": "treasury-stable-reserve-target",
+      "title": "Set stable reserve target in basis points",
+      "category": "treasury",
+      "description": "Summary: Reserve a portion of treasury assets in stable form to protect operating continuity. Rationale: The DAO should preserve enough low-volatility capital to cover payroll, grants, and critical services. Implementation: Set STABLE_RESERVE_BPS to 3500 on the Treasury module.",
+      "targets": ["$TREASURY_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "STABLE_RESERVE_BPS" },
+          { "type": "uint256", "value": "3500" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 6,
+      "seedKey": "risk-weth-ltv-tighten",
+      "title": "Tighten WETH LTV parameter",
+      "category": "risk",
+      "description": "Summary: Reduce the maximum allowed leverage on WETH-backed positions. Rationale: A slightly tighter LTV reduces liquidation cascades while keeping the market functional for borrowers. Implementation: Set WETH_LTV_BPS to 7600 on the Risk module.",
+      "targets": ["$RISK_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "WETH_LTV_BPS" },
+          { "type": "uint256", "value": "7600" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 7,
+      "seedKey": "risk-usdc-borrow-cap-raise",
+      "title": "Raise USDC borrow cap",
+      "category": "risk",
+      "description": "Summary: Expand the USDC borrow cap to support higher usage after recent liquidity growth. Rationale: Borrow demand has increased, but the protocol still wants a hard ceiling to limit tail risk. Implementation: Set USDC_BORROW_CAP to 15,000,000 tokens on the Risk module.",
+      "targets": ["$RISK_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "USDC_BORROW_CAP" },
+          { "type": "uint256", "value": "15000000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 8,
+      "seedKey": "risk-wbtc-liquidation-threshold",
+      "title": "Update WBTC liquidation threshold",
+      "category": "risk",
+      "description": "Summary: Adjust the WBTC liquidation threshold to better reflect recent volatility. Rationale: A tighter threshold improves solvency protection without fully disabling the asset's utility. Implementation: Set WBTC_LT_BPS to 8000 on the Risk module.",
+      "targets": ["$RISK_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "WBTC_LT_BPS" },
+          { "type": "uint256", "value": "8000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 9,
+      "seedKey": "risk-eth-usd-heartbeat",
+      "title": "Set ETH/USD oracle heartbeat",
+      "category": "risk",
+      "description": "Summary: Define a stricter heartbeat for the core ETH/USD oracle feed. Rationale: Faster stale-price detection reduces the chance of bad debt from delayed oracle updates. Implementation: Set ETH_USD_HEARTBEAT_SEC to 3600 on the Risk module.",
+      "targets": ["$RISK_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "ETH_USD_HEARTBEAT_SEC" },
+          { "type": "uint256", "value": "3600" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 10,
+      "seedKey": "risk-enable-isolation-mode",
+      "title": "Enable isolation mode guardrail",
+      "category": "risk",
+      "description": "Summary: Turn on isolation mode as a protocol-wide safety feature for riskier markets. Rationale: Isolation limits contagion from newly listed or volatile assets. Implementation: Set ISOLATION_MODE_ENABLED to true on the Risk module.",
+      "targets": ["$RISK_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setBool(bytes32,bool)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "ISOLATION_MODE_ENABLED" },
+          { "type": "bool", "value": true }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 11,
+      "seedKey": "governance-quorum-increase",
+      "title": "Increase governance quorum",
+      "category": "governance",
+      "description": "Summary: Raise the minimum quorum requirement for passing governance proposals. Rationale: Higher quorum can improve legitimacy and reduce the risk of low-participation changes. Implementation: Set QUORUM_BPS to 1200 on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "QUORUM_BPS" },
+          { "type": "uint256", "value": "1200" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 12,
+      "seedKey": "governance-voting-period-extension",
+      "title": "Extend voting period length",
+      "category": "governance",
+      "description": "Summary: Give tokenholders a longer window to react to new proposals. Rationale: Slightly longer voting periods can increase participation for global communities without making governance too slow. Implementation: Set VOTING_PERIOD_BLOCKS to 7200 on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "VOTING_PERIOD_BLOCKS" },
+          { "type": "uint256", "value": "7200" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 13,
+      "seedKey": "governance-voting-delay-tune",
+      "title": "Tune governance voting delay",
+      "category": "governance",
+      "description": "Summary: Shorten the time between proposal submission and voting start while keeping enough review time. Rationale: This helps governance move faster for routine changes without collapsing deliberation entirely. Implementation: Set VOTING_DELAY_BLOCKS to 600 on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "VOTING_DELAY_BLOCKS" },
+          { "type": "uint256", "value": "600" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 14,
+      "seedKey": "governance-threshold-lower",
+      "title": "Lower proposal threshold",
+      "category": "governance",
+      "description": "Summary: Reduce the token threshold required to open a proposal. Rationale: Lowering the threshold can make governance more accessible to aligned delegates while still requiring meaningful stake. Implementation: Set PROPOSAL_THRESHOLD to 100,000 tokens on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "PROPOSAL_THRESHOLD" },
+          { "type": "uint256", "value": "100000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 15,
+      "seedKey": "governance-delegate-reward-pool",
+      "title": "Create delegate rewards pilot pool",
+      "category": "governance",
+      "description": "Summary: Establish a pilot budget for delegate participation rewards. Rationale: A small reward pool can improve attendance, proposal review quality, and long-term governance sustainability. Implementation: Set DELEGATE_REWARD_POOL to 12,000 tokens on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "DELEGATE_REWARD_POOL" },
+          { "type": "uint256", "value": "12000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 16,
+      "seedKey": "governance-delegate-rewards-enable",
+      "title": "Enable delegate rewards pilot",
+      "category": "governance",
+      "description": "Summary: Turn on the delegate rewards program after setting its funding cap. Rationale: Explicit activation makes it easy to separate budget approval from policy activation. Implementation: Set DELEGATE_REWARDS_ENABLED to true on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setBool(bytes32,bool)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "DELEGATE_REWARDS_ENABLED" },
+          { "type": "bool", "value": true }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 17,
+      "seedKey": "governance-forum-uri",
+      "title": "Publish governance forum URI",
+      "category": "governance",
+      "description": "Summary: Anchor the official forum URI in governance-managed config. Rationale: A canonical URI helps voters and tooling find the correct offchain discussion source. Implementation: Set GOVERNANCE_FORUM_URI to ipfs://aido-forum-v1 on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setString(bytes32,string)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "GOVERNANCE_FORUM_URI" },
+          { "type": "string", "value": "ipfs://aido-forum-v1" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 18,
+      "seedKey": "governance-metadata-schema",
+      "title": "Set governance metadata schema",
+      "category": "governance",
+      "description": "Summary: Standardize proposal metadata formatting for external tooling and dashboards. Rationale: A shared metadata schema makes proposal rendering and analytics more reliable across clients. Implementation: Set GOVERNANCE_METADATA_SCHEMA to ipfs://aido-dao-schema-v1 on the Governance module.",
+      "targets": ["$GOVERNANCE_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setString(bytes32,string)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "GOVERNANCE_METADATA_SCHEMA" },
+          { "type": "string", "value": "ipfs://aido-dao-schema-v1" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 19,
+      "seedKey": "operations-monitoring-budget",
+      "title": "Approve H2 monitoring budget",
+      "category": "operations",
+      "description": "Summary: Reserve operating budget for uptime monitoring and alerting through the second half of the year. Rationale: Monitoring is a core protocol cost and should be explicitly budgeted. Implementation: Set MONITORING_BUDGET_H2 to 8,000 tokens on the Operations module.",
+      "targets": ["$OPERATIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "MONITORING_BUDGET_H2" },
+          { "type": "uint256", "value": "8000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 20,
+      "seedKey": "operations-rpc-failover-enable",
+      "title": "Enable RPC failover mode",
+      "category": "operations",
+      "description": "Summary: Activate failover support for RPC dependencies. Rationale: A live failover path reduces downtime risk during provider incidents or traffic spikes. Implementation: Set RPC_FAILOVER_ENABLED to true on the Operations module.",
+      "targets": ["$OPERATIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setBool(bytes32,bool)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "RPC_FAILOVER_ENABLED" },
+          { "type": "bool", "value": true }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 21,
+      "seedKey": "operations-pause-drill-policy",
+      "title": "Require emergency pause drills",
+      "category": "operations",
+      "description": "Summary: Make periodic incident-response drills a formal DAO policy. Rationale: Governance should verify that operators can execute emergency procedures before a real incident occurs. Implementation: Set PAUSE_DRILL_REQUIRED to true on the Operations module.",
+      "targets": ["$OPERATIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setBool(bytes32,bool)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "PAUSE_DRILL_REQUIRED" },
+          { "type": "bool", "value": true }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 22,
+      "seedKey": "operations-incident-playbook",
+      "title": "Set incident response playbook URI",
+      "category": "operations",
+      "description": "Summary: Anchor the latest incident response playbook in onchain config. Rationale: A canonical playbook URI makes it easier for operators and delegates to verify the current runbook. Implementation: Set INCIDENT_RESPONSE_PLAYBOOK to ipfs://aido-incident-playbook-v1 on the Operations module.",
+      "targets": ["$OPERATIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setString(bytes32,string)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "INCIDENT_RESPONSE_PLAYBOOK" },
+          { "type": "string", "value": "ipfs://aido-incident-playbook-v1" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 23,
+      "seedKey": "emissions-staking-rate-cut",
+      "title": "Reduce daily staking emissions",
+      "category": "emissions",
+      "description": "Summary: Lower staking emissions to improve token issuance efficiency. Rationale: Emissions should support participation without permanently oversubsidizing passive holders. Implementation: Set STAKING_EMISSION_PER_DAY to 450 tokens on the Emissions module.",
+      "targets": ["$EMISSIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "STAKING_EMISSION_PER_DAY" },
+          { "type": "uint256", "value": "450000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 24,
+      "seedKey": "emissions-liquidity-mining-cap",
+      "title": "Set monthly liquidity mining cap",
+      "category": "emissions",
+      "description": "Summary: Put a hard monthly cap on liquidity mining spend. Rationale: Incentive programs should be bounded and auditable rather than left to informal operator discretion. Implementation: Set LM_MONTHLY_CAP to 15,000 tokens on the Emissions module.",
+      "targets": ["$EMISSIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "LM_MONTHLY_CAP" },
+          { "type": "uint256", "value": "15000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 25,
+      "seedKey": "emissions-gho-rebate-boost",
+      "title": "Increase GHO utility rebate",
+      "category": "emissions",
+      "description": "Summary: Add a modest rebate for GHO-related protocol activity. Rationale: Targeted rebates can improve utility without reopening broad emissions expansion. Implementation: Set GHO_UTILITY_REBATE_BPS to 150 on the Emissions module.",
+      "targets": ["$EMISSIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "GHO_UTILITY_REBATE_BPS" },
+          { "type": "uint256", "value": "150" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 26,
+      "seedKey": "growth-hackathon-sponsor-pool",
+      "title": "Create hackathon sponsorship pool",
+      "category": "growth",
+      "description": "Summary: Allocate a budget for community hackathons and builder events. Rationale: Hackathon sponsorship is one of the fastest ways to attract experiments, integrations, and developer mindshare. Implementation: Set HACKATHON_SPONSOR_POOL to 20,000 tokens on the Growth module.",
+      "targets": ["$GROWTH_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "HACKATHON_SPONSOR_POOL" },
+          { "type": "uint256", "value": "20000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 27,
+      "seedKey": "growth-rseth-listing-enable",
+      "title": "Enable rsETH listing flag",
+      "category": "growth",
+      "description": "Summary: Turn on the governance listing flag for a new collateral candidate. Rationale: This proposal is a simplified onchain demo for enabling a new growth-oriented market. Implementation: Set RSETH_LISTED to true on the Growth module.",
+      "targets": ["$GROWTH_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setBool(bytes32,bool)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "RSETH_LISTED" },
+          { "type": "bool", "value": true }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 28,
+      "seedKey": "growth-ambassador-budget-h2",
+      "title": "Set H2 ambassador budget",
+      "category": "growth",
+      "description": "Summary: Fund the second-half ambassador and community education program. Rationale: Local advocates can improve retention, documentation, and organic awareness in emerging communities. Implementation: Set AMBASSADOR_BUDGET_H2 to 12,000 tokens on the Growth module.",
+      "targets": ["$GROWTH_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "AMBASSADOR_BUDGET_H2" },
+          { "type": "uint256", "value": "12000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 29,
+      "seedKey": "partnerships-integration-grant-pool",
+      "title": "Set strategic integration grant pool",
+      "category": "partnerships",
+      "description": "Summary: Establish a pool for integrations with wallets, analytics tools, and partner protocols. Rationale: Dedicated integration funding can accelerate partner adoption while keeping the spend visible to governance. Implementation: Set INTEGRATION_GRANT_POOL to 30,000 tokens on the Partnerships module.",
+      "targets": ["$PARTNERSHIPS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setUint(bytes32,uint256)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "INTEGRATION_GRANT_POOL" },
+          { "type": "uint256", "value": "30000000000000000000000" }
+        ]
+      ]
+    },
+    {
+      "proposalNumber": 30,
+      "seedKey": "operations-public-dashboards-enable",
+      "title": "Enable public governance dashboards",
+      "category": "operations",
+      "description": "Summary: Turn on the public dashboard flag for broader transparency. Rationale: Public analytics dashboards can improve accountability and make it easier for tokenholders to follow governance activity. Implementation: Set PUBLIC_DASHBOARDS_ENABLED to true on the Operations module.",
+      "targets": ["$OPERATIONS_MODULE_ADDRESS"],
+      "values": ["0"],
+      "signatures": ["setBool(bytes32,bool)"],
+      "arguments": [
+        [
+          { "type": "bytes32", "value": "PUBLIC_DASHBOARDS_ENABLED" },
+          { "type": "bool", "value": true }
+        ]
+      ]
+    }
+  ]
+}

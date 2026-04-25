@@ -1,6 +1,8 @@
 # Compiler files
 cache/
 out/
+dist/
+node_modules/
 
 # Ignores development broadcast logs
 !/broadcast
@@ -12,3 +14,7 @@ docs/
 
 # Dotenv file
 .env
+
+# Runtime data
+aido-backend/data/*.json
+aido-indexer/data/*.json

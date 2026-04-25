@@ -6,7 +6,8 @@ Repositori ini disusun sebagai monorepo hackathon dan saat ini berisi fondasi un
 
 - `aido-web` untuk frontend Next.js dan koneksi wallet ke Monad Testnet.
 - `aido-contract` untuk smart contract berbasis Foundry.
-- `aido-indexer` dan `aido-backend` sebagai placeholder untuk indexer Envio dan AI engine.
+- `aido-indexer` untuk watcher event proposal dari Monad Testnet.
+- `aido-backend` untuk webhook ingestion, analisis AI, dan penyimpanan hasil reasoning.
 
 ## Project Status
 
@@ -14,7 +15,10 @@ Status saat ini adalah **prototype in progress**.
 
 - Frontend wallet connection ke Monad Testnet sudah dikonfigurasi.
 - Workspace contract sudah siap dengan Foundry, namun kontrak governance final belum diimplementasikan.
-- Backend AI dan Envio indexer masih berupa struktur awal dan perlu di-*scaffold* lebih lanjut.
+- Backend Express + Vercel AI SDK sudah bisa menerima DAO dan proposal onchain, menjalankan analisis AI atau mock analysis, dan mengeksekusi vote langsung ke governor.
+- Indexer sekarang diarahkan ke arsitektur full onchain:
+  - `single-governor` untuk satu governor address yang sudah diketahui.
+  - `factory` untuk menangkap `DaoCreated` lalu mengindeks `ProposalCreated` dari setiap DAO baru.
 
 Artinya, README ini menjelaskan **visi produk + arsitektur target + kondisi implementasi repo saat ini** agar tetap kuat untuk presentasi hackathon dan tetap jujur terhadap kode yang ada.
 
@@ -52,6 +56,34 @@ Jika agen AI dapat dibangun di stack Web2, mengapa AIDO harus hidup di blockchai
 - Pengguna bisa memilih mode manual atau Auto-Pilot.
 - Setiap keputusan AI disertai *reasoning* yang dapat diaudit.
 - Voting dapat dieksekusi on-chain melalui agen yang telah didelegasikan.
+- Pengguna bisa membuat DAO baru di Monad testnet melalui factory contract, lalu langsung mengaktifkan AIDO untuk DAO tersebut.
+
+## User-Created DAO Flow
+
+Selain menganalisis proposal dari DAO yang sudah ada, AIDO juga bisa diperluas agar user membuat DAO sendiri.  
+Flow yang paling masuk akal untuk hackathon adalah:
+
+1. User membuka wizard “Create DAO”.
+2. User mengisi nama DAO, token address, quorum, voting period, dan daftar proposer awal.
+3. Frontend memanggil `DAO Factory` di Monad testnet.
+4. Factory mendeploy satu paket DAO baru:
+   - governor
+   - timelock
+   - registry metadata
+5. Factory emit event `DaoCreated`.
+6. Backend atau indexer menangkap event tersebut dan mendaftarkan DAO baru ke katalog AIDO.
+7. Mulai saat itu proposal dari DAO buatan user bisa:
+   - di-index,
+   - dianalisis AI,
+   - ditampilkan di dashboard,
+   - dan di-auto-vote jika user mengaktifkan Auto-Pilot.
+
+Keuntungan pendekatan ini:
+
+- onboarding DAO baru jadi self-service,
+- lebih kuat untuk demo karena seluruh lifecycle terjadi di Monad testnet,
+- tidak tergantung pada platform governance eksternal,
+- dan cocok untuk menunjukkan “AI governance infra”, bukan sekadar proposal reader.
 
 ## System Architecture
 
@@ -59,23 +91,23 @@ Arsitektur AIDO dirancang untuk berjalan secara asinkron dan *real-time*.
 
 ```mermaid
 flowchart LR
-  A["DAO Governor on Monad Testnet"] -->|ProposalCreated| B["Envio Indexer"]
-  B --> C["AIDO Backend / AI Engine"]
-  C --> D["OpenAI via Vercel AI Gateway"]
-  C --> E["Decision Logs / Proposal State"]
-  C --> F["Agent Wallet / Executor"]
-  F -->|castVote| A
-  G["AIDO Frontend"] --> C
-  G --> H["MonadVoter Registry Contract"]
-  H --> F
+  A["AidoDaoFactory"] -->|DaoCreated| B["AIDO Indexer"]
+  C["DAO Governor on Monad Testnet"] -->|ProposalCreated| B
+  B --> D["AIDO Backend / AI Engine"]
+  D --> E["OpenAI via Vercel AI Gateway"]
+  D --> F["DAO Catalog + Proposal Store"]
+  D --> G["Agent Wallet / Executor"]
+  G -->|castVote / castVoteWithReason| C
+  H["AIDO Frontend"] --> A
+  H --> D
 ```
 
 Komponen utama:
 
 1. **Blockchain (Monad Testnet)**  
-   Tempat smart contract DAO (Governor) dan kontrak registry AIDO berada.
-2. **Indexer (Envio)**  
-   Mendengarkan event `ProposalCreated` dan mengalirkan data proposal secara *real-time*.
+   Tempat `AidoDaoFactory`, `AidoDaoRegistry`, governor DAO, dan timelock berjalan.
+2. **Indexer**  
+   Mendengarkan `DaoCreated` dan `ProposalCreated` langsung dari Monad testnet.
 3. **Backend and AI Engine (Next.js API + Vercel AI SDK)**  
    Mengambil teks proposal, menjalankan analisis AI, menghitung profil risiko, dan menyusun rekomendasi.
 4. **Execution Layer (Agent Wallet)**  
@@ -338,8 +370,8 @@ export default function Dashboard() {
 aido/
 |-- aido-web/        # Next.js frontend, wallet connect, dashboard scaffold
 |-- aido-contract/   # Foundry workspace for smart contracts
-|-- aido-indexer/    # Placeholder for Envio indexer
-|-- aido-backend/    # Placeholder for backend / AI engine
+|-- aido-indexer/    # Viem-based proposal event watcher for Monad
+|-- aido-backend/    # Express backend for AI analysis and proposal storage
 |-- screenshots/     # Supporting assets
 `-- .github/         # CI workflow
 ```
@@ -352,13 +384,17 @@ Beberapa hal yang sudah benar-benar ada di repo saat ini:
 - `aido-web` sudah memakai Reown AppKit, Wagmi, React Query, Next.js 16, dan Tailwind CSS.
 - `aido-web/src/components/navbar.tsx` sudah menampilkan tombol wallet `<appkit-button />`.
 - `aido-contract` sudah memiliki workspace Foundry lengkap dengan CI GitHub Actions untuk `forge fmt`, `forge build`, dan `forge test`.
+- `aido-backend` sudah menyediakan endpoint `GET /health`, `POST /api/analyze`, `POST /api/trigger-analysis`, dan penyimpanan hasil analisis berbasis file JSON.
+- `aido-indexer` sudah menyediakan mode `single-governor` dan `factory` untuk indexing DAO native di Monad.
 
 Beberapa hal yang masih *to-do*:
 
 - kontrak registry khusus governance,
-- route API analisis proposal,
 - service agent execution,
-- skema indexer Envio,
+- alamat `DAO_FACTORY_ADDRESS` dan governor template final,
+- ABI final jika event factory atau governor berbeda dari asumsi saat ini,
+- integrasi frontend ke backend proposal feed,
+- migrasi ke Envio jika ingin hosted indexing dan GraphQL layer,
 - dashboard UI final untuk proposal dan reasoning log.
 
 ## Tech Stack
@@ -366,7 +402,9 @@ Beberapa hal yang masih *to-do*:
 - **Chain:** Monad Testnet
 - **Frontend:** Next.js, React, Tailwind CSS, Reown AppKit, Wagmi, Viem
 - **Smart Contracts:** Solidity, Foundry
-- **Indexer:** Envio
+- **Indexer (current):** Viem-based onchain event watcher
+- **Indexer (target):** Envio
+- **Backend (current):** Express.js
 - **AI Layer:** Vercel AI SDK + OpenAI
 - **Execution Layer:** Agent wallet / delegated executor
 
@@ -404,7 +442,28 @@ forge test
 
 ### 3. Backend and Indexer
 
-Direktori `aido-backend` dan `aido-indexer` saat ini belum memiliki scaffold runnable. README ini sudah menyiapkan desain target agar implementasi berikutnya lebih cepat.
+Jalankan backend:
+
+```bash
+cd aido-backend
+npm install
+npm run dev
+```
+
+Jalankan indexer:
+
+```bash
+cd aido-indexer
+npm install
+npm run dev
+```
+
+Catatan:
+
+- Backend default berjalan di `http://localhost:3001`.
+- Jika `INDEXER_MODE=single-governor`, indexer membutuhkan `GOVERNOR_ADDRESS`.
+- Jika `INDEXER_MODE=factory`, indexer membutuhkan `DAO_FACTORY_ADDRESS`.
+- Tanpa `OPENAI_API_KEY`, backend tetap berjalan dengan mode analisis mock saat `ANALYSIS_MODE=auto`.
 
 ## Suggested Environment Variables
 
@@ -415,14 +474,25 @@ Untuk pengembangan penuh, variabel berikut direkomendasikan:
 NEXT_PUBLIC_PROJECT_ID=your_reown_project_id
 
 # backend / ai
+ANALYSIS_MODE=auto
 OPENAI_API_KEY=your_openai_api_key
-VERCEL_AI_GATEWAY_BASE_URL=https://gateway.ai.vercel.pub/v1/projects/YOUR_PROJECT_ID/gateways/monad-gateway
+OPENAI_BASE_URL=https://gateway.ai.vercel.pub/v1/projects/YOUR_PROJECT_ID/gateways/monad-gateway
+OPENAI_MODEL=gpt-4.1
+INDEXER_SHARED_SECRET=change-me
 
 # blockchain
 MONAD_RPC_URL=https://testnet-rpc.monad.xyz
+INDEXER_MODE=factory
+MONAD_CHAIN_ID=10143
 GOVERNOR_ADDRESS=0xYourDaoGovernorAddress
-REGISTRY_ADDRESS=0xYourRegistryAddress
+GOVERNOR_START_BLOCK=1234567
+DAO_FACTORY_ADDRESS=0xYourDaoFactoryAddress
+FACTORY_START_BLOCK=1234500
+BACKEND_DAO_WEBHOOK_PATH=/api/register-dao
 AGENT_PRIVATE_KEY=0xyouragentprivatekey
+
+# service wiring
+BACKEND_URL=http://localhost:3001
 ```
 
 ## Why This Project Can Win a Hackathon
