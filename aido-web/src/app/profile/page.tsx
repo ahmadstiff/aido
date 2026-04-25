@@ -25,6 +25,7 @@ import {
 import { DecoratedCard } from "@/components/decorated-card";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+const AIDO_AGENT_ADDRESS = "0x42f484f4fad0093543A6EE211da829FF30e777EE" as const;
 
 function shortAddress(value?: string) {
   if (!value) return "—";
@@ -38,7 +39,6 @@ export default function ProfilePage() {
 
   const [risk, setRisk] = useState(0);
   const [autoPilot, setAutoPilot] = useState(false);
-  const [agentAddress, setAgentAddress] = useState("");
   const [lastAction, setLastAction] = useState<
     "claim" | "delegate-self" | "delegate-agent" | "save-config" | "owner-mint" | null
   >(null);
@@ -110,9 +110,6 @@ export default function ProfilePage() {
     if (!userConfig) return;
     setRisk(Number(userConfig.riskProfile));
     setAutoPilot(Boolean(userConfig.isAutoPilot));
-    setAgentAddress(
-      userConfig.delegatedAgent !== ZERO_ADDRESS ? userConfig.delegatedAgent : "",
-    );
   }, [userConfig]);
 
   useEffect(() => {
@@ -166,13 +163,12 @@ export default function ProfilePage() {
   ];
 
   const handleSaveConfig = () => {
-    const agent = agentAddress || ZERO_ADDRESS;
     setLastAction("save-config");
     writeContract({
       address: CONTRACTS.MONAD_VOTER_REGISTRY,
       abi: monadVoterRegistryAbi,
       functionName: "setConfig",
-      args: [risk, autoPilot, agent as `0x${string}`],
+      args: [risk, autoPilot, AIDO_AGENT_ADDRESS],
     });
   };
 
@@ -188,13 +184,12 @@ export default function ProfilePage() {
   };
 
   const handleDelegateAgent = () => {
-    if (!agentAddress) return;
     setLastAction("delegate-agent");
     writeContract({
       address: CONTRACTS.AIDO_TOKEN,
       abi: aidoTokenAbi,
       functionName: "delegate",
-      args: [agentAddress as `0x${string}`],
+      args: [AIDO_AGENT_ADDRESS],
     });
   };
 
@@ -231,8 +226,8 @@ export default function ProfilePage() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6C5CE7]/10">
             <IconShield className="h-7 w-7 text-[#6C5CE7]" />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#1A1625]">Profile</h1>
-          <p className="mt-2 text-sm leading-relaxed text-[#4F4862]">
+          <h1 className="text-2xl font-extrabold text-[#EEEDF6]">Profile</h1>
+          <p className="mt-2 text-sm leading-relaxed text-[#A8A3BC]">
             Connect your wallet to claim tokens, delegate voting power, and configure your AI agent.
           </p>
           <div className="mt-6 flex justify-center">
@@ -247,18 +242,18 @@ export default function ProfilePage() {
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#1A1625]">Governance Profile</h1>
-          <p className="mt-0.5 text-sm text-[#4F4862]">
+          <h1 className="text-2xl font-extrabold text-[#EEEDF6]">Governance Profile</h1>
+          <p className="mt-0.5 text-sm text-[#A8A3BC]">
             Onboard your wallet, activate voting power, and configure your AI agent.
           </p>
         </div>
-        <div className="rounded-xl border border-[#DEDCE6] bg-white px-3 py-2 text-xs text-[#4F4862]">
-          Wallet: <span className="font-mono text-[#1A1625]">{shortAddress(address)}</span>
+        <div className="rounded-xl border border-[#2D2842] bg-[#161229] px-3 py-2 text-xs text-[#A8A3BC]">
+          Wallet: <span className="font-mono text-[#EEEDF6]">{shortAddress(address)}</span>
         </div>
       </div>
 
       {successMessage && (
-        <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+        <div className="mt-6 rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-300">
           {successMessage}
         </div>
       )}
@@ -304,22 +299,22 @@ export default function ProfilePage() {
           >
             <div className="flex items-center gap-2">
               <IconShield className="h-4 w-4 text-[#6C5CE7]" />
-              <h2 className="text-base font-bold text-[#1A1625]">Onboarding Status</h2>
+              <h2 className="text-base font-bold text-[#EEEDF6]">Onboarding Status</h2>
             </div>
             <div className="mt-5 space-y-3">
               {onboardingSteps.map((step) => (
                 <div
                   key={step.label}
-                  className="flex items-start gap-3 rounded-xl border border-[#EEEDF4] bg-[#F8F7FC] px-4 py-3"
+                  className="flex items-start gap-3 rounded-xl border border-[#251D3F] bg-[#211A35] px-4 py-3"
                 >
                   <div
                     className={`mt-0.5 h-2.5 w-2.5 rounded-full ${
-                      step.done ? "bg-emerald-500" : "bg-[#D0CDD8]"
+                      step.done ? "bg-emerald-500" : "bg-[#4A435E]"
                     }`}
                   />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-[#1A1625]">{step.label}</p>
-                    <p className="mt-0.5 text-xs text-[#4F4862]">{step.hint}</p>
+                    <p className="text-sm font-semibold text-[#EEEDF6]">{step.label}</p>
+                    <p className="mt-0.5 text-xs text-[#A8A3BC]">{step.hint}</p>
                   </div>
                 </div>
               ))}
@@ -334,16 +329,16 @@ export default function ProfilePage() {
           >
             <div className="flex items-center gap-2">
               <IconDelegate className="h-4 w-4 text-[#6C5CE7]" />
-              <h2 className="text-base font-bold text-[#1A1625]">Token Actions</h2>
+              <h2 className="text-base font-bold text-[#EEEDF6]">Token Actions</h2>
             </div>
-            <p className="mt-1.5 text-sm leading-relaxed text-[#4F4862]">
+            <p className="mt-1.5 text-sm leading-relaxed text-[#A8A3BC]">
               Claim tokens first, then delegate to activate your voting power.
             </p>
 
-            <div className="mt-4 rounded-xl bg-[#F5F3FA] px-4 py-3 text-sm">
+            <div className="mt-4 rounded-xl bg-[#1F1933] px-4 py-3 text-sm">
               <div className="flex justify-between gap-3">
-                <span className="text-[#4F4862]">Current delegate</span>
-                <span className="font-mono text-[#1A1625]">
+                <span className="text-[#A8A3BC]">Current delegate</span>
+                <span className="font-mono text-[#EEEDF6]">
                   {currentDelegate && currentDelegate !== ZERO_ADDRESS
                     ? shortAddress(currentDelegate)
                     : "None"}
@@ -362,7 +357,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleDelegateSelf}
                 disabled={isPending || isSelfDelegated}
-                className="rounded-xl border border-[#DEDCE6] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1625] transition-all hover:bg-[#EEEDF4] disabled:opacity-40"
+                className="rounded-xl border border-[#2D2842] bg-[#161229] px-4 py-2.5 text-sm font-semibold text-[#EEEDF6] transition-all hover:bg-[#251D3F] disabled:opacity-40"
               >
                 {isSelfDelegated ? "Self Delegated" : "Delegate to Self"}
               </button>
@@ -371,10 +366,10 @@ export default function ProfilePage() {
             <div className="mt-3">
               <button
                 onClick={handleDelegateAgent}
-                disabled={isPending || !agentAddress}
-                className="w-full rounded-xl border border-[#DEDCE6] bg-white px-4 py-2.5 text-sm font-semibold text-[#1A1625] transition-all hover:bg-[#EEEDF4] disabled:opacity-40"
+                disabled={isPending}
+                className="w-full rounded-xl border border-[#2D2842] bg-[#161229] px-4 py-2.5 text-sm font-semibold text-[#EEEDF6] transition-all hover:bg-[#251D3F] disabled:opacity-40"
               >
-                Delegate to Agent Address
+                Delegate to AIDO Agent
               </button>
             </div>
           </DecoratedCard>
@@ -389,11 +384,11 @@ export default function ProfilePage() {
           >
             <div className="flex items-center gap-2">
               <IconAgent className="h-4 w-4 text-[#6C5CE7]" />
-              <h2 className="text-base font-bold text-[#1A1625]">AI Agent Config</h2>
+              <h2 className="text-base font-bold text-[#EEEDF6]">AI Agent Config</h2>
             </div>
 
             <div className="mt-5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
                 Risk Profile
               </label>
               <div className="mt-2.5 flex flex-wrap gap-2">
@@ -404,7 +399,7 @@ export default function ProfilePage() {
                     className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
                       risk === i
                         ? "bg-[#6C5CE7] text-white shadow-sm shadow-[#6C5CE7]/20"
-                        : "border border-[#DEDCE6] text-[#1A1625] hover:bg-[#EEEDF4]"
+                        : "border border-[#2D2842] text-[#EEEDF6] hover:bg-[#251D3F]"
                     }`}
                   >
                     {label}
@@ -415,44 +410,38 @@ export default function ProfilePage() {
 
             <div className="mt-5 flex items-center justify-between rounded-xl px-4 py-3">
               <div>
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
                   Auto-Pilot
                 </label>
-                <p className="mt-0.5 text-xs text-[#4F4862]">
+                <p className="mt-0.5 text-xs text-[#A8A3BC]">
                   The AI agent can vote automatically based on your risk profile.
                 </p>
               </div>
               <button
                 onClick={() => setAutoPilot(!autoPilot)}
                 className={`relative h-7 w-12 rounded-full transition-all ${
-                  autoPilot ? "bg-[#6C5CE7]" : "bg-[#DEDCE6]"
+                  autoPilot ? "bg-[#6C5CE7]" : "bg-[#2D2842]"
                 }`}
               >
                 <span
-                  className={`absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-all ${
+                  className={`absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-[#161229] shadow-sm transition-all ${
                     autoPilot ? "translate-x-5" : ""
                   }`}
                 />
               </button>
             </div>
 
-            <div className="mt-5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
-                Agent Address
-              </label>
-              <input
-                type="text"
-                value={agentAddress}
-                onChange={(e) => setAgentAddress(e.target.value)}
-                placeholder="0x..."
-                className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm font-mono text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
-              />
+            <div className="mt-5 rounded-xl bg-[#1F1933] px-4 py-3 text-sm">
+              <div className="flex justify-between gap-3">
+                <span className="text-[#A8A3BC]">AIDO Agent</span>
+                <span className="font-mono text-[#6C5CE7]">{shortAddress(AIDO_AGENT_ADDRESS)}</span>
+              </div>
             </div>
 
-            <div className="mt-5 rounded-xl bg-[#F5F3FA] px-4 py-3 text-sm">
+            <div className="mt-3 rounded-xl bg-[#1F1933] px-4 py-3 text-sm">
               <div className="flex justify-between gap-3">
-                <span className="text-[#4F4862]">Configured agent</span>
-                <span className="font-mono text-[#1A1625]">
+                <span className="text-[#A8A3BC]">Configured agent</span>
+                <span className="font-mono text-[#EEEDF6]">
                   {hasAgentConfigured ? shortAddress(userConfig?.delegatedAgent) : "None"}
                 </span>
               </div>
@@ -476,9 +465,9 @@ export default function ProfilePage() {
             >
               <div className="flex items-center gap-2">
               <IconSparkle className="h-4 w-4 text-[#6C5CE7]" />
-              <h2 className="text-base font-bold text-[#1A1625]">Owner Mint Tools</h2>
+              <h2 className="text-base font-bold text-[#EEEDF6]">Owner Mint Tools</h2>
               </div>
-              <p className="mt-1.5 text-sm text-[#4F4862]">
+              <p className="mt-1.5 text-sm text-[#A8A3BC]">
                 This wallet is the token owner, so it can mint AIDO to any address.
               </p>
 
@@ -488,7 +477,7 @@ export default function ProfilePage() {
                   value={mintRecipient}
                   onChange={(e) => setMintRecipient(e.target.value)}
                   placeholder="Recipient address"
-                  className="w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm font-mono text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
+                  className="w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm font-mono text-[#EEEDF6] placeholder:text-[#8D86A3] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
                 />
                 <input
                   type="number"
@@ -496,14 +485,14 @@ export default function ProfilePage() {
                   value={mintAmount}
                   onChange={(e) => setMintAmount(e.target.value)}
                   placeholder="Amount"
-                  className="w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
+                  className="w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm text-[#EEEDF6] placeholder:text-[#8D86A3] focus:border-[#6C5CE7] focus:outline-none focus:ring-2 focus:ring-[#6C5CE7]/10 transition-all"
                 />
               </div>
 
               <button
                 onClick={handleOwnerMint}
                 disabled={isPending || !mintRecipient || !mintAmount}
-                className="mt-4 w-full rounded-xl border border-[#6C5CE7]/20 bg-[#EDE8FF] px-4 py-2.5 text-sm font-semibold text-[#6C5CE7] transition-all hover:bg-[#E4DDFF] disabled:opacity-40"
+                className="mt-4 w-full rounded-xl border border-[#6C5CE7]/20 bg-[#2A1F4D] px-4 py-2.5 text-sm font-semibold text-[#6C5CE7] transition-all hover:bg-[#352A68] disabled:opacity-40"
               >
                 Mint AIDO
               </button>
@@ -530,7 +519,7 @@ function SummaryCard({
 }) {
   const toneClasses = {
     violet: "bg-[#6C5CE7]/15",
-    amber: "bg-[#6C5CE7]/12",
+    amber: "bg-[#6C5CE7]/[0.12]",
     emerald: "bg-[#6C5CE7]/10",
     sky: "bg-[#6C5CE7]/10",
   };
@@ -543,13 +532,13 @@ function SummaryCard({
       contentClassName="p-6"
     >
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#5C5670]">{title}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#C4BCFA]">{title}</p>
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${toneClasses[tone]}`}>
           {icon}
         </div>
       </div>
-      <p className="mt-2 text-3xl font-extrabold text-[#1A1625]">{value}</p>
-      <p className="mt-1 text-xs text-[#4F4862]">{subtitle}</p>
+      <p className="mt-2 text-3xl font-extrabold text-[#EEEDF6]">{value}</p>
+      <p className="mt-1 text-xs text-[#A8A3BC]">{subtitle}</p>
     </DecoratedCard>
   );
 }

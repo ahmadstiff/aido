@@ -40,7 +40,7 @@ export default function CreateDaoPage() {
   if (!isConnected) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <p className="text-[#4F4862]">Connect your wallet to create a DAO.</p>
+        <p className="text-[#A8A3BC]">Connect your wallet to create a DAO.</p>
       </div>
     );
   }
@@ -48,14 +48,14 @@ export default function CreateDaoPage() {
   if (txConfirmed) {
     return (
       <div className="mx-auto max-w-2xl px-4 sm:px-6 py-16 text-center">
-        <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-emerald-50 flex items-center justify-center">
+        <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
           <span className="text-xl">✓</span>
         </div>
-        <h1 className="text-2xl font-extrabold text-emerald-600">DAO Created!</h1>
-        <p className="mt-2 text-sm text-[#4F4862]">
+        <h1 className="text-2xl font-extrabold text-emerald-300">DAO Created!</h1>
+        <p className="mt-2 text-sm text-[#A8A3BC]">
           Your DAO has been deployed and registered on Monad testnet.
         </p>
-        <p className="mt-1 text-xs text-[#4F4862] font-mono break-all">
+        <p className="mt-1 text-xs text-[#A8A3BC] font-mono break-all">
           Tx: {txHash}
         </p>
       </div>
@@ -64,15 +64,15 @@ export default function CreateDaoPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 py-10">
-      <h1 className="text-2xl font-extrabold text-[#1A1625]">Create DAO</h1>
-      <p className="mt-0.5 text-sm text-[#4F4862]">
+      <h1 className="text-2xl font-extrabold text-[#EEEDF6]">Create DAO</h1>
+      <p className="mt-0.5 text-sm text-[#A8A3BC]">
         Deploy a new DAO with governor + timelock on Monad testnet
       </p>
 
-      <div className="mt-8 rounded-2xl bg-white border border-[#DEDCE6] p-6 shadow-sm space-y-5">
+      <div className="mt-8 rounded-2xl bg-[#161229] border border-[#2D2842] p-6 shadow-sm space-y-5">
         {/* DAO Name */}
         <div>
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+          <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
             DAO Name
           </label>
           <input
@@ -80,13 +80,13 @@ export default function CreateDaoPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="My DAO"
-            className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
+            className="mt-1.5 w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm text-[#EEEDF6] placeholder:text-[#8D86A3] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
           />
         </div>
 
         {/* Token Address */}
         <div>
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+          <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
             Voting Token Address
           </label>
           <input
@@ -94,33 +94,33 @@ export default function CreateDaoPage() {
             value={tokenAddress}
             onChange={(e) => setTokenAddress(e.target.value)}
             placeholder="0x..."
-            className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm font-mono text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
+            className="mt-1.5 w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm font-mono text-[#EEEDF6] placeholder:text-[#8D86A3] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
           />
-          <p className="mt-1 text-xs text-[#4F4862]">Must be ERC20Votes compatible</p>
+          <p className="mt-1 text-xs text-[#A8A3BC]">Must be ERC20Votes compatible</p>
         </div>
 
         {/* Grid: Voting Delay + Period */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
               Voting Delay (blocks)
             </label>
             <input
               type="number"
               value={votingDelay}
               onChange={(e) => setVotingDelay(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
+              className="mt-1.5 w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm text-[#EEEDF6] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
             />
           </div>
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
               Voting Period (blocks)
             </label>
             <input
               type="number"
               value={votingPeriod}
               onChange={(e) => setVotingPeriod(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
+              className="mt-1.5 w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm text-[#EEEDF6] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
             />
           </div>
         </div>
@@ -128,33 +128,33 @@ export default function CreateDaoPage() {
         {/* Grid: Threshold + Quorum */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
               Proposal Threshold
             </label>
             <input
               type="number"
               value={proposalThreshold}
               onChange={(e) => setProposalThreshold(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
+              className="mt-1.5 w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm text-[#EEEDF6] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
             />
-            <p className="mt-1 text-xs text-[#4F4862]">Min votes to propose (0 = anyone)</p>
+            <p className="mt-1 text-xs text-[#A8A3BC]">Min votes to propose (0 = anyone)</p>
           </div>
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
               Quorum (%)
             </label>
             <input
               type="number"
               value={quorum}
               onChange={(e) => setQuorum(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
+              className="mt-1.5 w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm text-[#EEEDF6] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Metadata URI */}
         <div>
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+          <label className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
             Metadata URI (optional)
           </label>
           <input
@@ -162,14 +162,14 @@ export default function CreateDaoPage() {
             value={metadataURI}
             onChange={(e) => setMetadataURI(e.target.value)}
             placeholder="ipfs://... or https://..."
-            className="mt-1.5 w-full rounded-xl border border-[#DEDCE6] bg-[#F5F3FA] px-4 py-2.5 text-sm text-[#1A1625] placeholder:text-[#B5B2C0] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
+            className="mt-1.5 w-full rounded-xl border border-[#2D2842] bg-[#1F1933] px-4 py-2.5 text-sm text-[#EEEDF6] placeholder:text-[#8D86A3] focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/10 focus:outline-none transition-all"
           />
         </div>
 
         {/* Info */}
-        <div className="rounded-xl bg-[#EEEDF4] p-3">
-          <p className="text-xs text-[#4F4862]">
-            <strong className="text-[#1A1625]">What happens:</strong> Factory deploys a Governor + Timelock pair, registers it in the DAO Registry, and emits a DaoCreated event for the indexer.
+        <div className="rounded-xl bg-[#251D3F] p-3">
+          <p className="text-xs text-[#A8A3BC]">
+            <strong className="text-[#EEEDF6]">What happens:</strong> Factory deploys a Governor + Timelock pair, registers it in the DAO Registry, and emits a DaoCreated event for the indexer.
           </p>
         </div>
 

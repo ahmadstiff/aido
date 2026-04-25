@@ -1,31 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import { createPublicClient, formatEther, http, parseAbiItem } from "viem";
-import { monadTestnet } from "@/config";
+import { formatEther } from "viem";
 import {
   CONTRACTS,
-  DEPLOY_BLOCK,
   ProposalStateLabels,
   aidoDaoRegistryAbi,
   aidoGovernorAbi,
 } from "@/lib/contracts";
-import { IconChart, IconPlus, IconProposal } from "@/components/icons";
+import { IconChart, IconPlus, IconProposal, IconSparkle } from "@/components/icons";
+import { useProposals, type Proposal } from "@/hooks/use-proposals";
 
-type Proposal = {
-  proposalId: bigint;
-  proposer: string;
-  description: string;
-  voteStart: bigint;
-  voteEnd: bigint;
-};
-
-const client = createPublicClient({
-  chain: monadTestnet,
-  transport: http(),
-});
+const PAGE_SIZE = 10;
 
 function shortAddress(value?: string) {
   if (!value) return "—";
@@ -34,9 +22,13 @@ function shortAddress(value?: string) {
 
 export default function ProposalsPage() {
   const { isConnected } = useAccount();
-  const [proposals, setProposals] = useState<Proposal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading: loading, error: queryError } = useProposals();
+  const proposals = data?.proposals ?? [];
+  const error = queryError ? "Failed to load proposals. Try refreshing." : null;
+
+  const [page, setPage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(proposals.length / PAGE_SIZE));
+  const paged = proposals.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   const { data: daoInfo } = useReadContract({
     address: CONTRACTS.AIDO_DAO_REGISTRY,
@@ -63,57 +55,12 @@ export default function ProposalsPage() {
     functionName: "proposalThreshold",
   });
 
-  useEffect(() => {
-    async function fetchProposals() {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const currentBlock = await client.getBlockNumber();
-        const batchSize = 99n;
-
-        const event = parseAbiItem(
-          "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 voteStart, uint256 voteEnd, string description)",
-        );
-
-        const allLogs = [];
-        for (let from = DEPLOY_BLOCK; from <= currentBlock; from += batchSize + 1n) {
-          const to = from + batchSize > currentBlock ? currentBlock : from + batchSize;
-          const logs = await client.getLogs({
-            address: CONTRACTS.AIDO_GOVERNOR,
-            event,
-            fromBlock: from,
-            toBlock: to,
-          });
-          allLogs.push(...logs);
-        }
-
-        const parsed = allLogs.map((log) => ({
-          proposalId: log.args.proposalId!,
-          proposer: log.args.proposer!,
-          description: log.args.description!,
-          voteStart: log.args.voteStart!,
-          voteEnd: log.args.voteEnd!,
-        }));
-
-        setProposals(parsed.reverse());
-      } catch (err) {
-        console.error("Failed to fetch proposals:", err);
-        setError("Failed to load on-chain proposals. Try refreshing again in a moment.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchProposals();
-  }, []);
-
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#1A1625]">Proposals</h1>
-          <p className="mt-0.5 text-sm text-[#4F4862]">
+          <h1 className="text-2xl font-extrabold text-[#EEEDF6]">Proposals</h1>
+          <p className="mt-0.5 text-sm text-[#A8A3BC]">
             Browse governance proposals created directly on Monad.
           </p>
         </div>
@@ -121,7 +68,7 @@ export default function ProposalsPage() {
           {isConnected && (
             <Link
               href="/proposals/create"
-              className="inline-flex items-center gap-2 rounded-xl border border-[#DEDCE6] bg-white px-5 py-2.5 text-sm font-semibold text-[#1A1625] transition-all hover:bg-[#EEEDF4]"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#2D2842] bg-[#161229] px-5 py-2.5 text-sm font-semibold text-[#EEEDF6] transition-all hover:bg-[#251D3F]"
             >
               <IconPlus className="h-4 w-4" />
               New Proposal
@@ -137,10 +84,10 @@ export default function ProposalsPage() {
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-[1.2fr_1fr]">
-        <div className="rounded-2xl border border-[#DEDCE6] bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-[#2D2842] bg-[#161229] p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <IconProposal className="h-4 w-4 text-[#6C5CE7]" />
-            <h2 className="text-base font-bold text-[#1A1625]">DAO Overview</h2>
+            <h2 className="text-base font-bold text-[#EEEDF6]">DAO Overview</h2>
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <InfoRow label="DAO Name" value={daoInfo?.name ?? "AIDO Demo DAO"} />
@@ -152,10 +99,10 @@ export default function ProposalsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[#DEDCE6] bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-[#2D2842] bg-[#161229] p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <IconChart className="h-4 w-4 text-[#6C5CE7]" />
-            <h2 className="text-base font-bold text-[#1A1625]">Governance Settings</h2>
+            <h2 className="text-base font-bold text-[#EEEDF6]">Governance Settings</h2>
           </div>
           <div className="mt-5 space-y-3">
             <InfoRow label="Voting delay" value={`${votingDelay?.toString() ?? "—"} blocks`} />
@@ -168,18 +115,18 @@ export default function ProposalsPage() {
 
       <div className="mt-8 space-y-4">
         {loading ? (
-          <div className="rounded-2xl border border-[#DEDCE6] bg-white p-10 text-center shadow-sm">
-            <p className="text-[#4F4862]">Loading proposals from Monad testnet...</p>
+          <div className="rounded-2xl border border-[#2D2842] bg-[#161229] p-10 text-center shadow-sm">
+            <p className="text-[#A8A3BC]">Loading proposals from Monad testnet...</p>
           </div>
         ) : error ? (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
+          <div className="rounded-2xl border border-red-500/25 bg-red-500/10 p-6 text-sm text-red-300">
             {error}
           </div>
         ) : proposals.length === 0 ? (
-          <div className="rounded-2xl border border-[#DEDCE6] bg-white p-8 shadow-sm">
-            <h3 className="text-lg font-bold text-[#1A1625]">No on-chain proposals yet</h3>
-            <p className="mt-2 text-sm leading-relaxed text-[#4F4862]">
-              The DAO is live, but this governor has not emitted any <code className="rounded bg-[#EEEDF4] px-1.5 py-0.5 text-[11px] text-[#1A1625]">ProposalCreated</code> events yet.
+          <div className="rounded-2xl border border-[#2D2842] bg-[#161229] p-8 shadow-sm">
+            <h3 className="text-lg font-bold text-[#EEEDF6]">No on-chain proposals yet</h3>
+            <p className="mt-2 text-sm leading-relaxed text-[#A8A3BC]">
+              The DAO is live, but this governor has not emitted any <code className="rounded bg-[#251D3F] px-1.5 py-0.5 text-[11px] text-[#EEEDF6]">ProposalCreated</code> events yet.
               You can create the first proposal from the dashboard.
             </p>
 
@@ -192,14 +139,14 @@ export default function ProposalsPage() {
               </Link>
               <Link
                 href="/profile"
-                className="rounded-xl border border-[#DEDCE6] bg-white px-5 py-2.5 text-sm font-semibold text-[#1A1625] transition-all hover:bg-[#EEEDF4]"
+                className="rounded-xl border border-[#2D2842] bg-[#161229] px-5 py-2.5 text-sm font-semibold text-[#EEEDF6] transition-all hover:bg-[#251D3F]"
               >
                 Setup Profile
               </Link>
             </div>
 
-            <div className="mt-6 rounded-xl bg-[#F8F7F4] p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">
+            <div className="mt-6 rounded-xl bg-[#1F1933] p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">
                 Available governance modules
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -214,19 +161,43 @@ export default function ProposalsPage() {
                 ].map(([label, value]) => (
                   <div
                     key={label}
-                    className="rounded-lg border border-[#DEDCE6] bg-white px-3 py-2 text-xs"
+                    className="rounded-lg border border-[#2D2842] bg-[#161229] px-3 py-2 text-xs"
                   >
-                    <p className="font-semibold text-[#1A1625]">{label}</p>
-                    <p className="mt-1 font-mono text-[#4F4862]">{shortAddress(value)}</p>
+                    <p className="font-semibold text-[#EEEDF6]">{label}</p>
+                    <p className="mt-1 font-mono text-[#A8A3BC]">{shortAddress(value)}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
         ) : (
-          proposals.map((proposal) => (
-            <ProposalCard key={proposal.proposalId.toString()} proposal={proposal} />
-          ))
+          <>
+            {paged.map((proposal) => (
+              <ProposalCard key={proposal.proposalId.toString()} proposal={proposal} />
+            ))}
+
+            {proposals.length > PAGE_SIZE && (
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <button
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className="rounded-lg border border-[#2D2842] bg-[#161229] px-3 py-1.5 text-xs font-semibold text-[#EEEDF6] transition-all hover:bg-[#251D3F] disabled:opacity-30"
+                >
+                  ← Prev
+                </button>
+                <span className="text-xs text-[#A8A3BC]">
+                  Page {page + 1} of {totalPages}
+                </span>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  disabled={page >= totalPages - 1}
+                  className="rounded-lg border border-[#2D2842] bg-[#161229] px-3 py-1.5 text-xs font-semibold text-[#EEEDF6] transition-all hover:bg-[#251D3F] disabled:opacity-30"
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -250,23 +221,23 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
 
   const stateLabel = state !== undefined ? ProposalStateLabels[Number(state)] ?? "Unknown" : "...";
   const stateColor: Record<string, string> = {
-    Active: "bg-emerald-50 text-emerald-700 border border-emerald-200",
-    Succeeded: "bg-blue-50 text-blue-700 border border-blue-200",
-    Defeated: "bg-red-50 text-red-700 border border-red-200",
-    Pending: "bg-amber-50 text-amber-700 border border-amber-200",
-    Executed: "bg-[#EDE8FF] text-[#6C5CE7] border border-[#6C5CE7]/20",
-    Queued: "bg-sky-50 text-sky-700 border border-sky-200",
+    Active: "bg-emerald-500/10 text-emerald-300 border border-emerald-500/25",
+    Succeeded: "bg-blue-500/10 text-blue-300 border border-blue-500/25",
+    Defeated: "bg-red-500/10 text-red-300 border border-red-500/25",
+    Pending: "bg-amber-500/10 text-amber-300 border border-amber-500/25",
+    Executed: "bg-[#2A1F4D] text-[#6C5CE7] border border-[#6C5CE7]/20",
+    Queued: "bg-sky-500/10 text-sky-300 border border-sky-500/25",
   };
 
   return (
     <Link
-      href={`/proposals/${proposal.proposalId.toString()}`}
-      className="block rounded-2xl border border-[#DEDCE6] bg-white p-6 shadow-sm transition-all hover:border-[#6C5CE7]/30 hover:shadow-md"
+      href={`/proposals/${encodeURIComponent(proposal.proposalKey)}`}
+      className="block rounded-2xl border border-[#2D2842] bg-[#161229] p-6 shadow-sm transition-all hover:border-[#6C5CE7]/30 hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <p className="font-bold text-[#1A1625]">{proposal.description}</p>
-          <div className="mt-2 flex flex-wrap gap-3 text-xs text-[#4F4862]">
+          <p className="font-bold text-[#EEEDF6]">{proposal.description}</p>
+          <div className="mt-2 flex flex-wrap gap-3 text-xs text-[#A8A3BC]">
             <span>Proposal #{proposal.proposalId.toString()}</span>
             <span>By {shortAddress(proposal.proposer)}</span>
             <span>Start {proposal.voteStart.toString()}</span>
@@ -275,24 +246,37 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
         </div>
         <span
           className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-            stateColor[stateLabel] ?? "bg-[#EEEDF4] text-[#4F4862]"
+            stateColor[stateLabel] ?? "bg-[#251D3F] text-[#A8A3BC]"
           }`}
         >
           {stateLabel}
         </span>
       </div>
 
-      {votes && (
-        <div className="mt-4 flex flex-wrap gap-4 text-xs font-medium text-[#4F4862]">
-          <span className="text-emerald-600">
-            For: {Number(formatEther(votes[1])).toLocaleString()}
+      <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-medium text-[#A8A3BC]">
+        {votes && (
+          <>
+            <span className="text-emerald-300">
+              For: {Number(formatEther(votes[1])).toLocaleString()}
+            </span>
+            <span className="text-red-500">
+              Against: {Number(formatEther(votes[0])).toLocaleString()}
+            </span>
+            <span>Abstain: {Number(formatEther(votes[2])).toLocaleString()}</span>
+          </>
+        )}
+        {proposal.analysis && (
+          <span className="ml-auto inline-flex items-center gap-1 rounded-lg bg-[#6C5CE7]/10 px-2 py-0.5 text-[#6C5CE7]">
+            <IconSparkle className="h-3 w-3" />
+            AI: {proposal.analysis.recommendedVote}
+            <span className={`ml-1 rounded px-1 py-px text-[9px] uppercase ${
+              proposal.analysis.mode === "openai" ? "bg-emerald-500/15 text-emerald-300" : "bg-[#251D3F] text-[#A8A3BC]"
+            }`}>
+              {proposal.analysis.mode === "openai" ? "Live" : "Mock"}
+            </span>
           </span>
-          <span className="text-red-500">
-            Against: {Number(formatEther(votes[0])).toLocaleString()}
-          </span>
-          <span>Abstain: {Number(formatEther(votes[2])).toLocaleString()}</span>
-        </div>
-      )}
+        )}
+      </div>
     </Link>
   );
 }
@@ -307,9 +291,9 @@ function InfoRow({
   mono?: boolean;
 }) {
   return (
-    <div className="rounded-xl bg-[#F8F7F4] px-4 py-3">
-      <p className="text-xs font-semibold uppercase tracking-wider text-[#4F4862]">{label}</p>
-      <p className={`mt-1 text-sm text-[#1A1625] ${mono ? "font-mono" : ""}`}>{value}</p>
+    <div className="rounded-xl bg-[#1F1933] px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-wider text-[#A8A3BC]">{label}</p>
+      <p className={`mt-1 text-sm text-[#EEEDF6] ${mono ? "font-mono" : ""}`}>{value}</p>
     </div>
   );
 }

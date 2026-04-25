@@ -52,10 +52,10 @@ export default function Home() {
           <div className="mx-auto mb-6 h-16 w-16 rounded-2xl bg-[#6C5CE7] flex items-center justify-center shadow-lg shadow-[#6C5CE7]/20">
             <IconSparkle className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-[#1A1625]">
+          <h1 className="text-4xl font-extrabold tracking-tight text-[#EEEDF6]">
             Welcome to AIDO
           </h1>
-          <p className="mt-3 text-[15px] leading-relaxed text-[#4F4862]">
+          <p className="mt-3 text-[15px] leading-relaxed text-[#A8A3BC]">
             AI-Powered Governance Agent for Monad.
             Analyze proposals, set your risk profile, and let AI vote for you.
           </p>
@@ -74,8 +74,8 @@ export default function Home() {
     <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#1A1625]">Dashboard</h1>
-          <p className="mt-0.5 text-sm text-[#4F4862]">Your governance overview</p>
+          <h1 className="text-2xl font-extrabold text-[#EEEDF6]">Dashboard</h1>
+          <p className="mt-0.5 text-sm text-[#A8A3BC]">Your governance overview</p>
         </div>
       </div>
 
@@ -88,15 +88,15 @@ export default function Home() {
           contentClassName="p-6"
         >
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#5C5670]">AIDO Balance</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#C4BCFA]">AIDO Balance</p>
             <div className="h-8 w-8 rounded-lg bg-[#6C5CE7]/20 flex items-center justify-center">
               <IconToken className="w-4 h-4 text-[#6C5CE7]" />
             </div>
           </div>
-          <p className="mt-2 text-3xl font-extrabold text-[#1A1625]">
+          <p className="mt-2 text-3xl font-extrabold text-[#EEEDF6]">
             {balance ? Number(formatEther(balance)).toLocaleString() : "0"}
           </p>
-          <p className="mt-1 text-xs text-[#4F4862]">governance tokens</p>
+          <p className="mt-1 text-xs text-[#A8A3BC]">governance tokens</p>
         </DecoratedCard>
 
         {/* Voting Power */}
@@ -107,18 +107,18 @@ export default function Home() {
           contentClassName="p-6"
         >
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#5C5670]">Voting Power</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#C4BCFA]">Voting Power</p>
             <div className="h-8 w-8 rounded-lg bg-[#6C5CE7]/15 flex items-center justify-center">
               <IconVotePower className="w-4 h-4 text-[#6C5CE7]" />
             </div>
           </div>
-          <p className="mt-2 text-3xl font-extrabold text-[#1A1625]">
+          <p className="mt-2 text-3xl font-extrabold text-[#EEEDF6]">
             {votes ? Number(formatEther(votes)).toLocaleString() : "0"}
           </p>
           {!hasDelegated && balance && balance > 0n ? (
             <p className="mt-1 text-xs font-medium text-[#6C5CE7]">⚠ Delegate to activate</p>
           ) : (
-            <p className="mt-1 text-xs text-[#4F4862]">active voting weight</p>
+            <p className="mt-1 text-xs text-[#A8A3BC]">active voting weight</p>
           )}
         </DecoratedCard>
 
@@ -130,25 +130,25 @@ export default function Home() {
           contentClassName="p-6"
         >
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#5C5670]">AI Agent</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#C4BCFA]">AI Agent</p>
             <div className="h-8 w-8 rounded-lg bg-[#6C5CE7]/15 flex items-center justify-center">
               <IconAgent className="w-4 h-4 text-[#6C5CE7]" />
             </div>
           </div>
           {isRegistered ? (
             <>
-              <p className="mt-2 text-xl font-extrabold text-[#1A1625]">
+              <p className="mt-2 text-xl font-extrabold text-[#EEEDF6]">
                 {RiskProfileLabels[userConfig.riskProfile] ?? "Unknown"}
               </p>
               <div className="mt-1.5 flex items-center gap-1.5">
-                <span className={`h-2 w-2 rounded-full ${userConfig.isAutoPilot ? "bg-[#6C5CE7]" : "bg-[#DEDCE6]"}`} />
-                <span className="text-xs text-[#4F4862]">Auto-Pilot {userConfig.isAutoPilot ? "On" : "Off"}</span>
+                <span className={`h-2 w-2 rounded-full ${userConfig.isAutoPilot ? "bg-[#6C5CE7]" : "bg-[#2D2842]"}`} />
+                <span className="text-xs text-[#A8A3BC]">Auto-Pilot {userConfig.isAutoPilot ? "On" : "Off"}</span>
               </div>
             </>
           ) : (
             <>
-              <p className="mt-2 text-xl font-extrabold text-[#B5B2C0]">Not Set</p>
-              <p className="mt-1 text-xs text-[#4F4862]">configure your agent</p>
+              <p className="mt-2 text-xl font-extrabold text-[#8D86A3]">Not Set</p>
+              <p className="mt-1 text-xs text-[#A8A3BC]">configure your agent</p>
             </>
           )}
         </DecoratedCard>
@@ -164,14 +164,14 @@ export default function Home() {
         </Link>
         <Link
           href="/proposals"
-          className="inline-flex items-center gap-2 rounded-xl border border-[#DEDCE6] bg-white px-5 py-2.5 text-sm font-semibold text-[#1A1625] hover:bg-[#EEEDF4] transition-all"
+          className="inline-flex items-center gap-2 rounded-xl border border-[#2D2842] bg-[#161229] px-5 py-2.5 text-sm font-semibold text-[#EEEDF6] hover:bg-[#251D3F] transition-all"
         >
           <IconProposal className="w-4 h-4" />
           View Proposals
         </Link>
         <Link
           href="/proposals/create"
-          className="inline-flex items-center gap-2 rounded-xl border border-[#DEDCE6] bg-white px-5 py-2.5 text-sm font-semibold text-[#1A1625] hover:bg-[#EEEDF4] transition-all"
+          className="inline-flex items-center gap-2 rounded-xl border border-[#2D2842] bg-[#161229] px-5 py-2.5 text-sm font-semibold text-[#EEEDF6] hover:bg-[#251D3F] transition-all"
         >
           <IconPlus className="w-4 h-4" />
           Create Proposal
