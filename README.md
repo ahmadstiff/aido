@@ -1,15 +1,68 @@
-# Monad Blitz Jogja Submission Process
+# AIDO
 
-## Steps to prepare your project repo:
+## Foundry
 
-1. Visit the `monad-blitz-jogja` repo (link [here](https://github.com/monad-developers/monad-blitz-jogja)) and fork it.
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-![1.png](/screenshots/1.png)
+Foundry consists of:
 
-2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-![2.png](https://github.com/monad-developers/monad-blitz-denver/blob/main/screenshots/2.png?raw=true)
+## Documentation
 
-3. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md` , you can change anything and everything.
+https://book.getfoundry.sh/
 
-4. For next steps head to [Blitz Portal](https://blitz.devnads.com)
+## Usage
+
+### Build
+
+```shell
+$ forge build
+```
+
+### Test
+
+```shell
+$ forge test
+```
+
+### Format
+
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
