@@ -73,6 +73,12 @@ Struct input yang disarankan:
 - `address initialOwner`
 - `string metadataURI`
 
+Catatan implementasi penting:
+
+- `token` sebaiknya kompatibel dengan `IVotes` atau pola `ERC20Votes`.
+- `votingDelay` dan `votingPeriod` sebaiknya memakai satuan **block**, bukan detik, agar selaras dengan event governor yang mengeluarkan `startBlock` dan `endBlock`.
+- factory sebaiknya memastikan ownership atau admin path setelah deployment tidak tertinggal di EOA deployer.
+
 Interface minimal yang direkomendasikan:
 
 ```solidity
@@ -174,6 +180,7 @@ Fungsi dan perilaku minimal yang disarankan:
 3. support `castVoteWithReason(uint256 proposalId, uint8 support, string reason)`
 4. support `hasVoted(uint256 proposalId, address voter) -> bool`
 5. expose voting lifecycle yang jelas
+6. terhubung ke token voting yang kompatibel dengan snapshot/delegation
 
 Event proposal yang diharapkan indexer:
 
@@ -190,6 +197,12 @@ event ProposalCreated(
     string description
 );
 ```
+
+Catatan kompatibilitas penting:
+
+- **Repo AIDO saat ini mengasumsikan event `ProposalCreated` versi Governor Bravo-compatible** yang punya field `signatures`.
+- Jika implementasi final memakai OpenZeppelin Governor murni tanpa `signatures`, maka ABI indexer di `aido-indexer/src/abi/governor.ts` dan tooling seed perlu diubah agar tetap cocok.
+- Jadi opsi paling aman untuk implementasi contract saat ini adalah memakai governor yang mempertahankan shape event di atas, atau menyiapkan patch indexer bersamaan dengan implementasi contract.
 
 Vote encoding yang disarankan:
 
@@ -282,6 +295,11 @@ Dengan pola ini:
 - calldata mudah di-encode,
 - dan seluruh 30 proposal bisa dieksekusi tanpa perlu 30 method custom yang berbeda.
 
+Catatan otorisasi penting:
+
+- module seperti `TreasuryModule`, `RiskModule`, dan lainnya sebaiknya dimiliki oleh `Timelock` atau hanya menerima call dari `Timelock/Governor`.
+- Kalau ownership module masih ada di deployer atau admin lain, proposal bisa berhasil dibuat tetapi gagal saat eksekusi.
+
 ## Recommended `AidoTimelockTemplate`
 
 Timelock bertugas menjaga execution governance tetap aman dan tertunda sesuai parameter DAO.
@@ -291,6 +309,7 @@ Yang penting:
 - governor menjadi proposer utama
 - executor bisa diatur sesuai model DAO
 - admin awal sebaiknya bisa dipindahkan atau dinolkan setelah bootstrap
+- module target governance sebaiknya di-ownership-transfer ke timelock
 
 Untuk hackathon, implementasi timelock standar ala OpenZeppelin sudah cukup cocok.
 

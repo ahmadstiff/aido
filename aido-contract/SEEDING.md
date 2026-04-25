@@ -41,12 +41,19 @@ function setString(bytes32 key, string calldata value) external;
 function setAddress(bytes32 key, address value) external;
 ```
 
+4. Module target yang dipakai proposal sudah di-ownership-transfer ke `Timelock` atau memang hanya menerima call governance.
+
 Kalau governor final kamu memakai gaya OpenZeppelin `propose(targets, values, calldatas, description)`, file seed ini tetap bisa dipakai.  
 Seeder tinggal:
 
 - ignore field `signatures`,
 - encode calldata dari `arguments`,
 - lalu kirim ke function `propose` versi OpenZeppelin.
+
+Tetapi perlu dicatat:
+
+- indexer repo ini saat ini masih mengasumsikan event `ProposalCreated` yang Governor Bravo-compatible,
+- jadi kalau event final berbeda, ABI indexer juga harus ikut disesuaikan.
 
 ## Required Addresses
 
