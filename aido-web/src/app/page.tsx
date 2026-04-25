@@ -8,6 +8,7 @@ import {
   RiskProfileLabels,
 } from "@/lib/contracts";
 import { IconToken, IconVotePower, IconAgent, IconProposal, IconPlus, IconSparkle } from "@/components/icons";
+import { DecoratedCard } from "@/components/decorated-card";
 
 export default function Home() {
   const { address, isConnected } = useAccount();
@@ -80,7 +81,12 @@ export default function Home() {
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {/* Token Balance */}
-        <div className="rounded-2xl bg-white border border-[#E2DFD9] p-6 shadow-sm">
+        <DecoratedCard
+          accent="violet"
+          pattern="hexagon"
+          secondaryPattern="shiny"
+          contentClassName="p-6"
+        >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">AIDO Balance</p>
             <div className="h-8 w-8 rounded-lg bg-[#6C5CE7]/10 flex items-center justify-center">
@@ -91,32 +97,42 @@ export default function Home() {
             {balance ? Number(formatEther(balance)).toLocaleString() : "0"}
           </p>
           <p className="mt-1 text-xs text-[#8C8680]">governance tokens</p>
-        </div>
+        </DecoratedCard>
 
         {/* Voting Power */}
-        <div className="rounded-2xl bg-white border border-[#E2DFD9] p-6 shadow-sm">
+        <DecoratedCard
+          accent="amber"
+          pattern="meteor"
+          secondaryPattern="shiny"
+          contentClassName="p-6"
+        >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">Voting Power</p>
-            <div className="h-8 w-8 rounded-lg bg-amber-50 flex items-center justify-center">
-              <IconVotePower className="w-4 h-4 text-amber-500" />
+            <div className="h-8 w-8 rounded-lg bg-[#FEF3E2] flex items-center justify-center">
+              <IconVotePower className="w-4 h-4 text-[#D97706]" />
             </div>
           </div>
           <p className="mt-2 text-3xl font-extrabold text-[#1A1613]">
             {votes ? Number(formatEther(votes)).toLocaleString() : "0"}
           </p>
           {!hasDelegated && balance && balance > 0n ? (
-            <p className="mt-1 text-xs font-medium text-amber-600">⚠ Delegate to activate</p>
+            <p className="mt-1 text-xs font-medium text-[#B45309]">⚠ Delegate to activate</p>
           ) : (
             <p className="mt-1 text-xs text-[#8C8680]">active voting weight</p>
           )}
-        </div>
+        </DecoratedCard>
 
         {/* AI Agent Status */}
-        <div className="rounded-2xl bg-white border border-[#E2DFD9] p-6 shadow-sm">
+        <DecoratedCard
+          accent="emerald"
+          pattern="wave"
+          secondaryPattern="shiny"
+          contentClassName="p-6"
+        >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">AI Agent</p>
-            <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-              <IconAgent className="w-4 h-4 text-emerald-500" />
+            <div className="h-8 w-8 rounded-lg bg-[#ECFAEF] flex items-center justify-center">
+              <IconAgent className="w-4 h-4 text-[#059669]" />
             </div>
           </div>
           {isRegistered ? (
@@ -125,7 +141,7 @@ export default function Home() {
                 {RiskProfileLabels[userConfig.riskProfile] ?? "Unknown"}
               </p>
               <div className="mt-1.5 flex items-center gap-1.5">
-                <span className={`h-2 w-2 rounded-full ${userConfig.isAutoPilot ? "bg-emerald-500" : "bg-[#E2DFD9]"}`} />
+                <span className={`h-2 w-2 rounded-full ${userConfig.isAutoPilot ? "bg-[#10B981]" : "bg-[#E2DFD9]"}`} />
                 <span className="text-xs text-[#8C8680]">Auto-Pilot {userConfig.isAutoPilot ? "On" : "Off"}</span>
               </div>
             </>
@@ -135,7 +151,7 @@ export default function Home() {
               <p className="mt-1 text-xs text-[#8C8680]">configure your agent</p>
             </>
           )}
-        </div>
+        </DecoratedCard>
       </div>
 
       {/* Actions */}

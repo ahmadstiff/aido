@@ -22,6 +22,7 @@ import {
   IconToken,
   IconVotePower,
 } from "@/components/icons";
+import { DecoratedCard } from "@/components/decorated-card";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -274,28 +275,33 @@ export default function ProfilePage() {
           title="Voting Power"
           value={votes ? Number(formatEther(votes)).toLocaleString() : "0"}
           subtitle={isSelfDelegated ? "active for manual voting" : "delegation required"}
-          icon={<IconVotePower className="h-4 w-4 text-amber-500" />}
+          icon={<IconVotePower className="h-4 w-4 text-[#D97706]" />}
           tone="amber"
         />
         <SummaryCard
           title="Faucet"
           value={hasClaimed ? "Claimed" : formatEther(faucetAmount ?? 0n)}
           subtitle={hasClaimed ? "already used" : "AIDO available to claim"}
-          icon={<IconSparkle className="h-4 w-4 text-emerald-500" />}
+          icon={<IconSparkle className="h-4 w-4 text-[#059669]" />}
           tone="emerald"
         />
         <SummaryCard
           title="Agent Users"
           value={registeredUsersCount?.toString() ?? "0"}
           subtitle={hasAgentConfigured ? "this wallet is registered" : "this wallet is not registered"}
-          icon={<IconAgent className="h-4 w-4 text-sky-500" />}
+          icon={<IconAgent className="h-4 w-4 text-[#0284C7]" />}
           tone="sky"
         />
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.05fr_1.35fr]">
         <div className="space-y-6">
-          <div className="rounded-2xl border border-[#E2DFD9] bg-white p-6 shadow-sm">
+          <DecoratedCard
+            accent="violet"
+            pattern="wave"
+            secondaryPattern="shiny"
+            contentClassName="p-6"
+          >
             <div className="flex items-center gap-2">
               <IconShield className="h-4 w-4 text-[#6C5CE7]" />
               <h2 className="text-base font-bold text-[#1A1613]">Onboarding Status</h2>
@@ -318,9 +324,14 @@ export default function ProfilePage() {
                 </div>
               ))}
             </div>
-          </div>
+          </DecoratedCard>
 
-          <div className="rounded-2xl border border-[#E2DFD9] bg-white p-6 shadow-sm">
+          <DecoratedCard
+            accent="amber"
+            pattern="meteor"
+            secondaryPattern="shiny"
+            contentClassName="p-6"
+          >
             <div className="flex items-center gap-2">
               <IconDelegate className="h-4 w-4 text-[#6C5CE7]" />
               <h2 className="text-base font-bold text-[#1A1613]">Token Actions</h2>
@@ -366,11 +377,16 @@ export default function ProfilePage() {
                 Delegate to Agent Address
               </button>
             </div>
-          </div>
+          </DecoratedCard>
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-2xl border border-[#E2DFD9] bg-white p-6 shadow-sm">
+          <DecoratedCard
+            accent="emerald"
+            pattern="hexagon"
+            secondaryPattern="shiny"
+            contentClassName="p-6"
+          >
             <div className="flex items-center gap-2">
               <IconAgent className="h-4 w-4 text-[#6C5CE7]" />
               <h2 className="text-base font-bold text-[#1A1613]">AI Agent Config</h2>
@@ -449,10 +465,15 @@ export default function ProfilePage() {
             >
               {isPending ? "Saving..." : "Save Config"}
             </button>
-          </div>
+          </DecoratedCard>
 
           {isOwner && (
-            <div className="rounded-2xl border border-[#E2DFD9] bg-white p-6 shadow-sm">
+            <DecoratedCard
+              accent="sky"
+              pattern="wave"
+              secondaryPattern="shiny"
+              contentClassName="p-6"
+            >
               <div className="flex items-center gap-2">
                 <IconSparkle className="h-4 w-4 text-[#6C5CE7]" />
                 <h2 className="text-base font-bold text-[#1A1613]">Owner Mint Tools</h2>
@@ -486,7 +507,7 @@ export default function ProfilePage() {
               >
                 Mint AIDO
               </button>
-            </div>
+            </DecoratedCard>
           )}
         </div>
       </div>
@@ -508,14 +529,19 @@ function SummaryCard({
   tone: "violet" | "amber" | "emerald" | "sky";
 }) {
   const toneClasses = {
-    violet: "bg-[#6C5CE7]/10",
-    amber: "bg-amber-50",
-    emerald: "bg-emerald-50",
-    sky: "bg-sky-50",
+    violet: "bg-[#EDE8FF]",
+    amber: "bg-[#FEF3E2]",
+    emerald: "bg-[#ECFAEF]",
+    sky: "bg-[#E8F4FB]",
   };
 
   return (
-    <div className="rounded-2xl border border-[#E2DFD9] bg-white p-6 shadow-sm">
+    <DecoratedCard
+      accent={tone}
+      pattern={tone === "violet" ? "hexagon" : tone === "amber" ? "meteor" : "wave"}
+      secondaryPattern="shiny"
+      contentClassName="p-6"
+    >
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wider text-[#8C8680]">{title}</p>
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${toneClasses[tone]}`}>
@@ -524,6 +550,6 @@ function SummaryCard({
       </div>
       <p className="mt-2 text-3xl font-extrabold text-[#1A1613]">{value}</p>
       <p className="mt-1 text-xs text-[#8C8680]">{subtitle}</p>
-    </div>
+    </DecoratedCard>
   );
 }
