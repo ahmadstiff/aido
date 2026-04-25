@@ -1,9 +1,23 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "format": "governor-bravo-compatible-seed",
+  "language": "en",
   "chainId": 10143,
   "network": "monad-testnet",
   "governorAddressEnv": "DAO_GOVERNOR_ADDRESS",
+  "proposalFunction": {
+    "name": "propose",
+    "signature": "propose(address[],uint256[],string[],bytes[],string)",
+    "compatibleVariants": [
+      "propose(address[],uint256[],bytes[],string)"
+    ]
+  },
+  "argumentEncodingRules": {
+    "bytes32": "Use stringToBytes32 for human-readable keys unless the value is already a full 0x-prefixed 32-byte hex string.",
+    "uint256": "Values are stored as strings to avoid JSON precision loss.",
+    "bool": "Values are stored as native JSON booleans.",
+    "string": "Values are stored as UTF-8 strings."
+  },
   "requiredTargetEnvs": [
     "TREASURY_MODULE_ADDRESS",
     "RISK_MODULE_ADDRESS",
@@ -13,7 +27,7 @@
     "GROWTH_MODULE_ADDRESS",
     "PARTNERSHIPS_MODULE_ADDRESS"
   ],
-  "notes": "Resolve $ENV placeholders before submitting. Encode each arguments[i] entry into calldatas[i]. Proposal IDs are computed by the governor onchain.",
+  "notes": "Resolve $ENV placeholders before submitting. Encode each arguments[i] entry into calldatas[i]. Proposal IDs are computed by the governor onchain. All proposal content is written in English.",
   "proposals": [
     {
       "proposalNumber": 1,
@@ -26,7 +40,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "MARKETING_BUDGET_Q2" },
+          { "type": "bytes32", "value": "MARKETING_BUDGET_Q2", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "25000000000000000000000" }
         ]
       ]
@@ -42,7 +56,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "BUG_BOUNTY_POOL" },
+          { "type": "bytes32", "value": "BUG_BOUNTY_POOL", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "10000000000000000000000" }
         ]
       ]
@@ -58,7 +72,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "ECOSYSTEM_GRANTS_R1" },
+          { "type": "bytes32", "value": "ECOSYSTEM_GRANTS_R1", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "50000000000000000000000" }
         ]
       ]
@@ -74,7 +88,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "TREASURY_RUNWAY_FLOOR_MONTHS" },
+          { "type": "bytes32", "value": "TREASURY_RUNWAY_FLOOR_MONTHS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "18" }
         ]
       ]
@@ -90,7 +104,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "STABLE_RESERVE_BPS" },
+          { "type": "bytes32", "value": "STABLE_RESERVE_BPS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "3500" }
         ]
       ]
@@ -106,7 +120,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "WETH_LTV_BPS" },
+          { "type": "bytes32", "value": "WETH_LTV_BPS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "7600" }
         ]
       ]
@@ -122,7 +136,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "USDC_BORROW_CAP" },
+          { "type": "bytes32", "value": "USDC_BORROW_CAP", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "15000000000000000000000000" }
         ]
       ]
@@ -138,7 +152,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "WBTC_LT_BPS" },
+          { "type": "bytes32", "value": "WBTC_LT_BPS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "8000" }
         ]
       ]
@@ -154,7 +168,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "ETH_USD_HEARTBEAT_SEC" },
+          { "type": "bytes32", "value": "ETH_USD_HEARTBEAT_SEC", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "3600" }
         ]
       ]
@@ -170,7 +184,7 @@
       "signatures": ["setBool(bytes32,bool)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "ISOLATION_MODE_ENABLED" },
+          { "type": "bytes32", "value": "ISOLATION_MODE_ENABLED", "encoding": "stringToBytes32" },
           { "type": "bool", "value": true }
         ]
       ]
@@ -186,7 +200,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "QUORUM_BPS" },
+          { "type": "bytes32", "value": "QUORUM_BPS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "1200" }
         ]
       ]
@@ -202,7 +216,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "VOTING_PERIOD_BLOCKS" },
+          { "type": "bytes32", "value": "VOTING_PERIOD_BLOCKS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "7200" }
         ]
       ]
@@ -218,7 +232,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "VOTING_DELAY_BLOCKS" },
+          { "type": "bytes32", "value": "VOTING_DELAY_BLOCKS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "600" }
         ]
       ]
@@ -234,7 +248,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "PROPOSAL_THRESHOLD" },
+          { "type": "bytes32", "value": "PROPOSAL_THRESHOLD", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "100000000000000000000000" }
         ]
       ]
@@ -250,7 +264,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "DELEGATE_REWARD_POOL" },
+          { "type": "bytes32", "value": "DELEGATE_REWARD_POOL", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "12000000000000000000000" }
         ]
       ]
@@ -266,7 +280,7 @@
       "signatures": ["setBool(bytes32,bool)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "DELEGATE_REWARDS_ENABLED" },
+          { "type": "bytes32", "value": "DELEGATE_REWARDS_ENABLED", "encoding": "stringToBytes32" },
           { "type": "bool", "value": true }
         ]
       ]
@@ -282,7 +296,7 @@
       "signatures": ["setString(bytes32,string)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "GOVERNANCE_FORUM_URI" },
+          { "type": "bytes32", "value": "GOVERNANCE_FORUM_URI", "encoding": "stringToBytes32" },
           { "type": "string", "value": "ipfs://aido-forum-v1" }
         ]
       ]
@@ -298,7 +312,7 @@
       "signatures": ["setString(bytes32,string)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "GOVERNANCE_METADATA_SCHEMA" },
+          { "type": "bytes32", "value": "GOVERNANCE_METADATA_SCHEMA", "encoding": "stringToBytes32" },
           { "type": "string", "value": "ipfs://aido-dao-schema-v1" }
         ]
       ]
@@ -314,7 +328,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "MONITORING_BUDGET_H2" },
+          { "type": "bytes32", "value": "MONITORING_BUDGET_H2", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "8000000000000000000000" }
         ]
       ]
@@ -330,7 +344,7 @@
       "signatures": ["setBool(bytes32,bool)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "RPC_FAILOVER_ENABLED" },
+          { "type": "bytes32", "value": "RPC_FAILOVER_ENABLED", "encoding": "stringToBytes32" },
           { "type": "bool", "value": true }
         ]
       ]
@@ -346,7 +360,7 @@
       "signatures": ["setBool(bytes32,bool)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "PAUSE_DRILL_REQUIRED" },
+          { "type": "bytes32", "value": "PAUSE_DRILL_REQUIRED", "encoding": "stringToBytes32" },
           { "type": "bool", "value": true }
         ]
       ]
@@ -362,7 +376,7 @@
       "signatures": ["setString(bytes32,string)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "INCIDENT_RESPONSE_PLAYBOOK" },
+          { "type": "bytes32", "value": "INCIDENT_RESPONSE_PLAYBOOK", "encoding": "stringToBytes32" },
           { "type": "string", "value": "ipfs://aido-incident-playbook-v1" }
         ]
       ]
@@ -378,7 +392,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "STAKING_EMISSION_PER_DAY" },
+          { "type": "bytes32", "value": "STAKING_EMISSION_PER_DAY", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "450000000000000000000" }
         ]
       ]
@@ -394,7 +408,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "LM_MONTHLY_CAP" },
+          { "type": "bytes32", "value": "LM_MONTHLY_CAP", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "15000000000000000000000" }
         ]
       ]
@@ -410,7 +424,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "GHO_UTILITY_REBATE_BPS" },
+          { "type": "bytes32", "value": "GHO_UTILITY_REBATE_BPS", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "150" }
         ]
       ]
@@ -426,7 +440,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "HACKATHON_SPONSOR_POOL" },
+          { "type": "bytes32", "value": "HACKATHON_SPONSOR_POOL", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "20000000000000000000000" }
         ]
       ]
@@ -442,7 +456,7 @@
       "signatures": ["setBool(bytes32,bool)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "RSETH_LISTED" },
+          { "type": "bytes32", "value": "RSETH_LISTED", "encoding": "stringToBytes32" },
           { "type": "bool", "value": true }
         ]
       ]
@@ -458,7 +472,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "AMBASSADOR_BUDGET_H2" },
+          { "type": "bytes32", "value": "AMBASSADOR_BUDGET_H2", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "12000000000000000000000" }
         ]
       ]
@@ -474,7 +488,7 @@
       "signatures": ["setUint(bytes32,uint256)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "INTEGRATION_GRANT_POOL" },
+          { "type": "bytes32", "value": "INTEGRATION_GRANT_POOL", "encoding": "stringToBytes32" },
           { "type": "uint256", "value": "30000000000000000000000" }
         ]
       ]
@@ -490,7 +504,7 @@
       "signatures": ["setBool(bytes32,bool)"],
       "arguments": [
         [
-          { "type": "bytes32", "value": "PUBLIC_DASHBOARDS_ENABLED" },
+          { "type": "bytes32", "value": "PUBLIC_DASHBOARDS_ENABLED", "encoding": "stringToBytes32" },
           { "type": "bool", "value": true }
         ]
       ]

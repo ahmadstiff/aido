@@ -29,7 +29,7 @@ const envSchema = z.object({
   ANALYSIS_MODE: z.enum(["auto", "mock", "openai"]).default("auto"),
   AI_GATEWAY_API_KEY: optionalString,
   AI_GATEWAY_BASE_URL: optionalUrl,
-  AI_GATEWAY_MODEL: z.string().default("openai/gpt-4.1"),
+  AI_GATEWAY_MODEL: z.string().default("google/gemini-2.0-flash-lite"),
   OPENAI_API_KEY: optionalString,
   OPENAI_BASE_URL: optionalUrl,
   OPENAI_MODEL: z.string().default("gpt-4.1"),

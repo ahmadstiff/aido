@@ -6,6 +6,14 @@ import { readState, writeState } from "./state.js";
 import { sendDaoToBackend, sendProposalToBackend } from "./webhook.js";
 import type { IndexedGovernorState, IndexerState, ProposalWebhookPayload } from "./types.js";
 
+const MAX_LOG_RANGE = 100n;
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 function assertSingleGovernorConfig(): void {
   if (!indexerEnv.governorAddress) {
     throw new Error(
@@ -41,6 +49,21 @@ function seedBootstrapGovernors(state: IndexerState): IndexerState {
       governors[key] = {
         governorAddress: indexerEnv.governorAddress,
         lastProcessedBlock: indexerEnv.governorStartBlock?.toString() ?? null,
+        name: indexerEnv.daoName,
+        creator: indexerEnv.daoCreator,
+        tokenAddress: indexerEnv.daoTokenAddress,
+        timelockAddress: indexerEnv.daoTimelockAddress,
+        metadataUri: indexerEnv.daoMetadataUri,
+      };
+    } else {
+      governors[key] = {
+        ...governors[key],
+        name: governors[key].name ?? indexerEnv.daoName,
+        creator: governors[key].creator ?? indexerEnv.daoCreator,
+        tokenAddress: governors[key].tokenAddress ?? indexerEnv.daoTokenAddress,
+        timelockAddress:
+          governors[key].timelockAddress ?? indexerEnv.daoTimelockAddress,
+        metadataUri: governors[key].metadataUri ?? indexerEnv.daoMetadataUri,
       };
     }
   }
@@ -49,6 +72,40 @@ function seedBootstrapGovernors(state: IndexerState): IndexerState {
     ...state,
     governors,
   };
+}
+
+async function registerBootstrapDaos(state: IndexerState): Promise<IndexerState> {
+  const nextState: IndexerState = {
+    ...state,
+    governors: { ...state.governors },
+  };
+
+  for (const [key, governor] of Object.entries(nextState.governors)) {
+    if (governor.registeredAt) {
+      continue;
+    }
+
+    await sendDaoToBackend({
+      governorAddress: governor.governorAddress,
+      timelockAddress: governor.timelockAddress,
+      tokenAddress: governor.tokenAddress,
+      creator: governor.creator,
+      name: governor.name,
+      metadataUri: governor.metadataUri,
+      chainId: indexerEnv.monadChainId,
+    });
+
+    nextState.governors[key] = {
+      ...governor,
+      registeredAt: new Date().toISOString(),
+    };
+
+    console.log(
+      `[indexer] registered bootstrap dao governor=${governor.governorAddress} name=${governor.name ?? "unnamed"}`,
+    );
+  }
+
+  return nextState;
 }
 
 function toProposalPayload(log: {
@@ -106,12 +163,26 @@ async function syncFactory(
     return state;
   }
 
-  const logs = await client.getLogs({
-    address: indexerEnv.daoFactoryAddress,
-    event: daoCreatedEvent,
-    fromBlock,
-    toBlock: latestBlock,
-  });
+  const logs = [];
+  for (
+    let chunkFrom = fromBlock;
+    chunkFrom <= latestBlock;
+    chunkFrom += MAX_LOG_RANGE
+  ) {
+    const chunkTo =
+      chunkFrom + (MAX_LOG_RANGE - 1n) > latestBlock
+        ? latestBlock
+        : chunkFrom + (MAX_LOG_RANGE - 1n);
+
+    const chunkLogs = await client.getLogs({
+      address: indexerEnv.daoFactoryAddress,
+      event: daoCreatedEvent,
+      fromBlock: chunkFrom,
+      toBlock: chunkTo,
+    });
+
+    logs.push(...chunkLogs);
+  }
 
   const nextState: IndexerState = {
     ...state,
@@ -188,12 +259,26 @@ async function syncGovernor(
     return state;
   }
 
-  const logs = await client.getLogs({
-    address: getAddress(governorAddress),
-    event: proposalCreatedEvent,
-    fromBlock,
-    toBlock: latestBlock,
-  });
+  const logs = [];
+  for (
+    let chunkFrom = fromBlock;
+    chunkFrom <= latestBlock;
+    chunkFrom += MAX_LOG_RANGE
+  ) {
+    const chunkTo =
+      chunkFrom + (MAX_LOG_RANGE - 1n) > latestBlock
+        ? latestBlock
+        : chunkFrom + (MAX_LOG_RANGE - 1n);
+
+    const chunkLogs = await client.getLogs({
+      address: getAddress(governorAddress),
+      event: proposalCreatedEvent,
+      fromBlock: chunkFrom,
+      toBlock: chunkTo,
+    });
+
+    logs.push(...chunkLogs);
+  }
 
   for (const log of logs) {
     if (
@@ -214,6 +299,10 @@ async function syncGovernor(
     console.log(
       `[indexer:governor] delivered proposal=${payload.proposalId} governor=${governorAddress} block=${payload.blockNumber}`,
     );
+
+    if (indexerEnv.deliveryIntervalMs > 0) {
+      await delay(indexerEnv.deliveryIntervalMs);
+    }
   }
 
   return {
@@ -258,6 +347,9 @@ async function pollLoop(mode: "single-governor" | "factory"): Promise<void> {
   console.log(
     `[indexer:${mode}] dao webhook => ${indexerEnv.backendUrl}${indexerEnv.backendDaoWebhookPath}`,
   );
+
+  state = await registerBootstrapDaos(state);
+  await writeState(state);
 
   while (!stopped) {
     try {

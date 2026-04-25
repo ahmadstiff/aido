@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "seed:proposals": "node scripts/seed-proposals.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.53",

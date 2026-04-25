@@ -131,6 +131,7 @@ export async function castGovernorVote(options: {
     voter,
     governorAddress,
     proposalId: options.proposal.proposalId,
+    proposalKey: options.proposal.proposalKey,
     support: options.support,
     reason: options.reason,
     txHash,

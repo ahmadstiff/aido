@@ -19,6 +19,7 @@ Backend service untuk:
 - `POST /api/register-dao`
 - `POST /api/analyze`
 - `POST /api/trigger-analysis`
+- `POST /api/proposals/:proposalId/reanalyze`
 - `POST /api/onchain/vote`
 
 ## Run
@@ -41,6 +42,8 @@ Contoh cek status runtime:
 ```bash
 curl -s http://localhost:3001/api/capabilities
 ```
+
+Default gateway model di repo ini sekarang `google/gemini-2.0-flash-lite`.
 
 ## Example Requests
 
@@ -70,6 +73,17 @@ curl -s -X POST http://localhost:3001/api/analyze \
     "title": "Growth incentives for GHO",
     "proposalText": "Allocate 5M GHO from treasury to a six-month growth incentives program.",
     "preferencePresetId": "treasury-discipline"
+  }'
+```
+
+Re-analyze proposal yang sudah diindex, cocok untuk flow frontend saat user membuka detail proposal:
+
+```bash
+curl -s -X POST \
+  http://localhost:3001/api/proposals/0xd0b2617883e9d925bc581f95cf2d806b8155dd0f:43245944018826288398548221809429345225320582769597971086577082603438335050632/reanalyze \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "requireLive": true
   }'
 ```
 
@@ -112,5 +126,7 @@ bisa langsung dipakai untuk Monad testnet.
 
 - `POST /api/register-dao` dan `POST /api/trigger-analysis` bisa diamankan dengan `INDEXER_SHARED_SECRET`.
 - `POST /api/analyze` dan `POST /api/trigger-analysis` mendukung `preferencePresetId`.
+- `POST /api/analyze` dan `POST /api/proposals/:proposalId/reanalyze` mendukung `requireLive` untuk memaksa error jika AI live gagal, tanpa fallback ke mock.
+- `GET /api/proposals` mendukung query `governorAddress` dan `limit`, sehingga frontend bisa mengambil proposal per DAO tanpa memfilter semua data di client.
 - `POST /api/onchain/vote` membutuhkan `AGENT_PRIVATE_KEY`.
 - Source proposal sekarang diasumsikan `monad` native onchain.

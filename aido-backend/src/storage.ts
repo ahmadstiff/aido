@@ -10,6 +10,14 @@ const emptyDatabase: ProposalDatabase = {
 
 let writeQueue = Promise.resolve();
 
+export function buildProposalKey(options: {
+  proposalId: string;
+  contractAddress?: string;
+}): string {
+  const scope = options.contractAddress?.toLowerCase() ?? "manual";
+  return `${scope}:${options.proposalId}`;
+}
+
 async function ensureDatabaseFile(): Promise<void> {
   await fs.mkdir(path.dirname(appEnv.dataFile), { recursive: true });
 
@@ -141,7 +149,7 @@ export async function saveProposal(
 ): Promise<StoredProposal> {
   return withWriteLock(async () => {
     const database = await readDatabase();
-    database.proposals[proposal.proposalId] = proposal;
+    database.proposals[proposal.proposalKey] = proposal;
     await writeDatabase(database);
     return proposal;
   });
@@ -156,10 +164,19 @@ export async function listProposals(): Promise<StoredProposal[]> {
 }
 
 export async function getProposal(
-  proposalId: string,
+  proposalIdOrKey: string,
 ): Promise<StoredProposal | null> {
   const database = await readDatabase();
-  return database.proposals[proposalId] ?? null;
+  if (database.proposals[proposalIdOrKey]) {
+    return database.proposals[proposalIdOrKey] ?? null;
+  }
+
+  return (
+    Object.values(database.proposals).find((proposal) =>
+      proposal.proposalId === proposalIdOrKey ||
+      proposal.proposalKey === proposalIdOrKey,
+    ) ?? null
+  );
 }
 
 export async function saveDao(dao: StoredDao): Promise<StoredDao> {

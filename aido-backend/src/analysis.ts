@@ -5,6 +5,7 @@ import { appEnv } from "./config.js";
 import { buildPrompt, buildSystemPrompt } from "./prompts.js";
 import { getAavePreferencePreset } from "./preferences.js";
 import type {
+  AnalyzeProposalOptions,
   AnalysisInput,
   ProposalAnalysis,
   RecommendedVote,
@@ -38,6 +39,12 @@ function shouldUseOpenAI(): boolean {
   }
 
   return Boolean(appEnv.openaiApiKey);
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 function summarizeText(text: string): string {
@@ -259,50 +266,75 @@ async function createOpenAiAnalysis(
 async function createGatewayAnalysis(
   input: AnalysisInput,
 ): Promise<ProposalAnalysis> {
-  const response = await fetch(`${appEnv.openaiBaseUrl}/chat/completions`, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${appEnv.openaiApiKey}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: appEnv.openaiModel,
-      temperature: 0.2,
-      messages: [
-        {
-          role: "system",
-          content: `${buildSystemPrompt(input)} Return JSON only with keys: summary, recommendedVote, reasoning, riskScore, alignmentScore.`,
-        },
-        {
-          role: "user",
-          content: buildPrompt(input),
-        },
-      ],
-    }),
-  });
+  let lastError: Error | null = null;
 
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(
-      `AI Gateway request failed with ${response.status}: ${body || response.statusText}`,
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const response = await fetch(`${appEnv.openaiBaseUrl}/chat/completions`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${appEnv.openaiApiKey}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: appEnv.openaiModel,
+        temperature: 0.2,
+        messages: [
+          {
+            role: "system",
+            content: `${buildSystemPrompt(input)} Return JSON only with keys: summary, recommendedVote, reasoning, riskScore, alignmentScore.`,
+          },
+          {
+            role: "user",
+            content: buildPrompt(input),
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      const error = new Error(
+        `AI Gateway request failed with ${response.status}: ${body || response.statusText}`,
+      );
+
+      lastError = error;
+      if (response.status === 429 && attempt < 3) {
+        await delay(attempt * 1500);
+        continue;
+      }
+
+      throw error;
+    }
+
+    const payload = (await response.json()) as GatewayChatCompletionResponse;
+    const rawContent = parseGatewayMessageContent(
+      payload.choices?.[0]?.message?.content,
     );
+    const parsed = JSON.parse(extractJsonObject(rawContent));
+    const object = analysisSchema.parse(parsed);
+
+    return {
+      ...object,
+      mode: "openai",
+    };
   }
 
-  const payload = (await response.json()) as GatewayChatCompletionResponse;
-  const rawContent = parseGatewayMessageContent(payload.choices?.[0]?.message?.content);
-  const parsed = JSON.parse(extractJsonObject(rawContent));
-  const object = analysisSchema.parse(parsed);
-
-  return {
-    ...object,
-    mode: "openai",
-  };
+  throw lastError ?? new Error("AI Gateway request failed after retries.");
 }
 
 export async function analyzeProposal(
   input: AnalysisInput,
+  options: AnalyzeProposalOptions = {},
 ): Promise<ProposalAnalysis> {
+  if (options.requireLive && !Boolean(appEnv.openaiApiKey)) {
+    throw new Error("Live AI analysis is not configured.");
+  }
+
   if (!shouldUseOpenAI()) {
+    if (options.requireLive) {
+      throw new Error("Live AI analysis is disabled by configuration.");
+    }
+
     return createMockAnalysis(input);
   }
 
@@ -313,7 +345,7 @@ export async function analyzeProposal(
 
     return await createOpenAiAnalysis(input);
   } catch (error) {
-    if (appEnv.analysisMode === "openai") {
+    if (appEnv.analysisMode === "openai" || options.requireLive) {
       throw error;
     }
 

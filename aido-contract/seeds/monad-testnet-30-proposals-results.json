@@ -1,0 +1,247 @@
+{
+  "governorAddress": "0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f",
+  "proposer": "0x42f484f4fad0093543A6EE211da829FF30e777EE",
+  "proposalMode": "bravo",
+  "results": [
+    {
+      "proposalNumber": 1,
+      "seedKey": "treasury-q2-marketing-budget",
+      "title": "Set Q2 marketing budget ceiling",
+      "txHash": "0x2cb5942c72cbf2be50b580b3f20cd66e4cfe3eeb0b448aa7e24baa2cc96c71ad",
+      "blockNumber": "27695978",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 2,
+      "seedKey": "treasury-security-bounty-pool",
+      "title": "Increase bug bounty reserve",
+      "txHash": "0x22cce2f7d200e5fa5599bb05105df209165ffb86aae9ecfcd62f0e447e3fa3a9",
+      "blockNumber": "27695981",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 3,
+      "seedKey": "treasury-ecosystem-grants-r1",
+      "title": "Create ecosystem grants round 1 pool",
+      "txHash": "0x767585557b9d724e5477e638372282b0c15e6fda089a08224b29517a4d8198f8",
+      "blockNumber": "27695983",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 4,
+      "seedKey": "treasury-runway-floor-policy",
+      "title": "Set treasury runway floor policy",
+      "txHash": "0x608ca175ecd03760d2780caf888338a9460b3546c059c0184f63783aaefe0629",
+      "blockNumber": "27695986",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 5,
+      "seedKey": "treasury-stable-reserve-target",
+      "title": "Set stable reserve target in basis points",
+      "txHash": "0x50cfc56c6000e60530c9d1d90fc7a143e8f54b43638ed1425675cf052404d389",
+      "blockNumber": "27695988",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 6,
+      "seedKey": "risk-weth-ltv-tighten",
+      "title": "Tighten WETH LTV parameter",
+      "txHash": "0x417433f0e2184c086f8fda505610937cea15f491b4303900a8317acb2df7fa15",
+      "blockNumber": "27695991",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 7,
+      "seedKey": "risk-usdc-borrow-cap-raise",
+      "title": "Raise USDC borrow cap",
+      "txHash": "0x5008afe9dd7e31347e746a6f1bdf8cd6b0e9b1e3b8e752299d6353945b5db781",
+      "blockNumber": "27695993",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 8,
+      "seedKey": "risk-wbtc-liquidation-threshold",
+      "title": "Update WBTC liquidation threshold",
+      "txHash": "0x0bfb15ba85b3b24fc5a8d40c73f4c725076edbb0fdce9ea4b6c2dc0dc3874b35",
+      "blockNumber": "27695996",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 9,
+      "seedKey": "risk-eth-usd-heartbeat",
+      "title": "Set ETH/USD oracle heartbeat",
+      "txHash": "0x805ed9a0c6e3446a0dfce4772bc2dce0a6a89a266d52f33bc7299e81c66d5f5c",
+      "blockNumber": "27696000",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 10,
+      "seedKey": "risk-enable-isolation-mode",
+      "title": "Enable isolation mode guardrail",
+      "txHash": "0x24c9fcbe2477bdac74d48c74724dc3bdf1befcb35873b410187a145362dfe8c1",
+      "blockNumber": "27696003",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 11,
+      "seedKey": "governance-quorum-increase",
+      "title": "Increase governance quorum",
+      "txHash": "0xd573b993add331e6f049266a00bb499430bc1f5af184bd60b7d653380f584e8b",
+      "blockNumber": "27696005",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 12,
+      "seedKey": "governance-voting-period-extension",
+      "title": "Extend voting period length",
+      "txHash": "0x766dc494f276daba5b8c959b9780860265d5a3f4f055b3c5d5d2b3fb3af7e29b",
+      "blockNumber": "27696008",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 13,
+      "seedKey": "governance-voting-delay-tune",
+      "title": "Tune governance voting delay",
+      "txHash": "0x602d343ad2fa0bcb0af1d04646880ee45813eb4901b798a8c13f5944ea3732a0",
+      "blockNumber": "27696011",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 14,
+      "seedKey": "governance-threshold-lower",
+      "title": "Lower proposal threshold",
+      "txHash": "0x449facedd5f7e22cf37f3388ca811538ddd3551cca08426b2259f6dfaed9af7b",
+      "blockNumber": "27696013",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 15,
+      "seedKey": "governance-delegate-reward-pool",
+      "title": "Create delegate rewards pilot pool",
+      "txHash": "0x2e4a95501c159cd80095e20bc5212e97a35a0a3f4b2438c7fa44e6479117639a",
+      "blockNumber": "27696016",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 16,
+      "seedKey": "governance-delegate-rewards-enable",
+      "title": "Enable delegate rewards pilot",
+      "txHash": "0x99db67b088f4b682dedbca589ad404218f1bcad806685c595d34d0be7c049ce7",
+      "blockNumber": "27696019",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 17,
+      "seedKey": "governance-forum-uri",
+      "title": "Publish governance forum URI",
+      "txHash": "0x747fb70990d3530e834adbc65f11cd3d8c19eed39aa921045d1747e3d981f287",
+      "blockNumber": "27696021",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 18,
+      "seedKey": "governance-metadata-schema",
+      "title": "Set governance metadata schema",
+      "txHash": "0x7b6506055fefb6a7584d147ca7c42772f3bbd14844e0d094958c83db0109636f",
+      "blockNumber": "27696024",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 19,
+      "seedKey": "operations-monitoring-budget",
+      "title": "Approve H2 monitoring budget",
+      "txHash": "0x518d5fb452c9da6ce37fc9c3d41c7160534894a08156cedc9c47c5005403a7da",
+      "blockNumber": "27696027",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 20,
+      "seedKey": "operations-rpc-failover-enable",
+      "title": "Enable RPC failover mode",
+      "txHash": "0x5d4e17c856f7094f54f0250fd4ae4b31c2af4ae0b8904e671b538c383954609d",
+      "blockNumber": "27696029",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 21,
+      "seedKey": "operations-pause-drill-policy",
+      "title": "Require emergency pause drills",
+      "txHash": "0xf07c753efd90d5340610f66d8fca0b37e9b98348081693de3cf29fcb8f7eb22c",
+      "blockNumber": "27696032",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 22,
+      "seedKey": "operations-incident-playbook",
+      "title": "Set incident response playbook URI",
+      "txHash": "0x95110b3694a2dbcce3444bc0452e0fa1692445f020f158f081a7a4d3439e1d48",
+      "blockNumber": "27696035",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 23,
+      "seedKey": "emissions-staking-rate-cut",
+      "title": "Reduce daily staking emissions",
+      "txHash": "0xfb33830988f45093da860d8b9a083a569f1a8374168a1bf57f9e5a0b950a605f",
+      "blockNumber": "27696038",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 24,
+      "seedKey": "emissions-liquidity-mining-cap",
+      "title": "Set monthly liquidity mining cap",
+      "txHash": "0xe638f7e782b79e592c7bfa5b566b91ed662c068eb6caba7b7a584f0685eb6d78",
+      "blockNumber": "27696042",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 25,
+      "seedKey": "emissions-gho-rebate-boost",
+      "title": "Increase GHO utility rebate",
+      "txHash": "0xcea2e77d5a249e8558d4d9f8b8adffdacb1ae708d74aea65b8c9679f5bafe46d",
+      "blockNumber": "27696045",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 26,
+      "seedKey": "growth-hackathon-sponsor-pool",
+      "title": "Create hackathon sponsorship pool",
+      "txHash": "0x7987a364d125251422e1d1c6719162b27fbb02234f4279dd7ff57c3f5623b052",
+      "blockNumber": "27696048",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 27,
+      "seedKey": "growth-rseth-listing-enable",
+      "title": "Enable rsETH listing flag",
+      "txHash": "0xd04c4145aa1b1b06e5363756183de35b717638c1e89a9c0ad81d2c0bf2afdccb",
+      "blockNumber": "27696050",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 28,
+      "seedKey": "growth-ambassador-budget-h2",
+      "title": "Set H2 ambassador budget",
+      "txHash": "0xb55b6536b4355e2433156cc7637083cb2ed2b154e55b695f38e9fc2eeb1b6f6d",
+      "blockNumber": "27696053",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 29,
+      "seedKey": "partnerships-integration-grant-pool",
+      "title": "Set strategic integration grant pool",
+      "txHash": "0xa3e464671b09d456a5a341a97809da8bec643af808b1ca43e378b49da4a93f52",
+      "blockNumber": "27696056",
+      "status": "success"
+    },
+    {
+      "proposalNumber": 30,
+      "seedKey": "operations-public-dashboards-enable",
+      "title": "Enable public governance dashboards",
+      "txHash": "0x330e8b81b3285a157a592487954a24ff0c4e9e338ee8f7c13b45404130fac876",
+      "blockNumber": "27696058",
+      "status": "success"
+    }
+  ]
+}

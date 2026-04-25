@@ -27,6 +27,7 @@ export interface OnchainVoteRecord {
   voter: string;
   governorAddress: string;
   proposalId: string;
+  proposalKey: string;
   support: RecommendedVote;
   reason: string;
   txHash: string;
@@ -58,7 +59,12 @@ export interface ProposalAnalysis {
   mode: AnalysisMode;
 }
 
+export interface AnalyzeProposalOptions {
+  requireLive?: boolean;
+}
+
 export interface StoredProposal {
+  proposalKey: string;
   proposalId: string;
   source: "manual" | "indexer";
   sourcePlatform?: "monad";

@@ -9,6 +9,7 @@ import {
   listAavePreferencePresets,
 } from "./preferences.js";
 import {
+  buildProposalKey,
   getDao,
   getProposal,
   listDaos,
@@ -22,6 +23,7 @@ import type { AnalysisInput, StoredDao, StoredProposal } from "./types.js";
 const app = express();
 
 const manualAnalyzeSchema = z.object({
+  proposalKey: z.string().optional(),
   proposalId: z.union([z.string(), z.number()]).optional(),
   proposalText: z.string().min(1),
   title: z.string().optional(),
@@ -33,6 +35,7 @@ const manualAnalyzeSchema = z.object({
   endBlock: z.union([z.string(), z.number()]).optional(),
   blockNumber: z.union([z.string(), z.number()]).optional(),
   txHash: z.string().optional(),
+  requireLive: z.boolean().optional(),
 });
 
 const daoRegistrationSchema = z.object({
@@ -74,9 +77,17 @@ const triggerSchema = z.object({
 });
 
 const voteSchema = z.object({
+  proposalKey: z.string().optional(),
   proposalId: z.union([z.string(), z.number()]),
   support: z.enum(["FOR", "AGAINST", "ABSTAIN"]).optional(),
   reason: z.string().max(1000).optional(),
+});
+
+const reanalyzeSchema = z.object({
+  preferencePresetId: z.enum(aavePreferencePresetIds).optional(),
+  userRiskProfile: z.enum(riskProfiles).optional(),
+  ethicalFocus: z.string().optional(),
+  requireLive: z.boolean().optional(),
 });
 
 app.use(
@@ -191,9 +202,26 @@ app.post("/api/register-dao", async (req, res, next) => {
   }
 });
 
-app.get("/api/proposals", async (_req, res, next) => {
+app.get("/api/proposals", async (req, res, next) => {
   try {
-    const proposals = await listProposals();
+    const governorAddress =
+      typeof req.query.governorAddress === "string"
+        ? req.query.governorAddress.toLowerCase()
+        : undefined;
+    const limit =
+      typeof req.query.limit === "string" ? Number.parseInt(req.query.limit, 10) : undefined;
+
+    let proposals = await listProposals();
+    if (governorAddress) {
+      proposals = proposals.filter(
+        (proposal) => proposal.contractAddress?.toLowerCase() === governorAddress,
+      );
+    }
+
+    if (limit && Number.isFinite(limit) && limit > 0) {
+      proposals = proposals.slice(0, limit);
+    }
+
     res.json({ proposals });
   } catch (error) {
     next(error);
@@ -224,7 +252,7 @@ app.post("/api/onchain/vote", async (req, res, next) => {
   try {
     const body = voteSchema.parse(req.body);
     const proposalId = String(body.proposalId);
-    const proposal = await getProposal(proposalId);
+    const proposal = await getProposal(body.proposalKey ?? proposalId);
     if (!proposal) {
       res.status(404).json({ error: "Proposal not found" });
       return;
@@ -255,10 +283,55 @@ app.post("/api/onchain/vote", async (req, res, next) => {
   }
 });
 
+app.post("/api/proposals/:proposalId/reanalyze", async (req, res, next) => {
+  try {
+    const proposal = await getProposal(req.params.proposalId);
+    if (!proposal) {
+      res.status(404).json({ error: "Proposal not found" });
+      return;
+    }
+
+    const body = reanalyzeSchema.parse(req.body ?? {});
+    const input: AnalysisInput = applyPreferencePreset({
+      proposalId: proposal.proposalId,
+      preferencePresetId: body.preferencePresetId ?? proposal.preferencePresetId,
+      proposalText: proposal.description,
+      userRiskProfile: body.userRiskProfile ?? proposal.userRiskProfile,
+      ethicalFocus: body.ethicalFocus ?? proposal.ethicalFocus,
+      proposer: proposal.proposer,
+      startBlock: proposal.startBlock,
+      endBlock: proposal.endBlock,
+      blockNumber: proposal.blockNumber,
+      txHash: proposal.txHash,
+      sourceEventId: proposal.sourceEventId,
+    });
+
+    const analysis = await analyzeProposal(input, {
+      requireLive: body.requireLive,
+    });
+
+    const updated: StoredProposal = {
+      ...proposal,
+      preferencePresetId: input.preferencePresetId,
+      preferencePresetName: input.preferencePresetName,
+      userRiskProfile: input.userRiskProfile,
+      ethicalFocus: input.ethicalFocus,
+      analysis,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await saveProposal(updated);
+    res.json(updated);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.post("/api/analyze", async (req, res, next) => {
   try {
     const body = manualAnalyzeSchema.parse(req.body);
     const proposalId = String(body.proposalId ?? `manual-${Date.now()}`);
+    const proposalKey = body.proposalKey ?? buildProposalKey({ proposalId });
 
     const input: AnalysisInput = applyPreferencePreset({
       proposalId,
@@ -275,11 +348,14 @@ app.post("/api/analyze", async (req, res, next) => {
       txHash: body.txHash,
     });
 
-    const existing = await getProposal(proposalId);
-    const analysis = await analyzeProposal(input);
+    const existing = await getProposal(proposalKey);
+    const analysis = await analyzeProposal(input, {
+      requireLive: body.requireLive,
+    });
     const now = new Date().toISOString();
 
     const saved = await saveProposal({
+      proposalKey,
       proposalId,
       source: "manual",
       preferencePresetId: input.preferencePresetId,
@@ -333,11 +409,16 @@ app.post("/api/trigger-analysis", async (req, res, next) => {
       sourceEventId: body.sourceEventId,
     });
 
-    const existing = await getProposal(proposalId);
+    const proposalKey = buildProposalKey({
+      proposalId,
+      contractAddress: body.contractAddress,
+    });
+    const existing = await getProposal(proposalKey);
     const analysis = await analyzeProposal(input);
     const now = new Date().toISOString();
 
     const saved: StoredProposal = {
+      proposalKey,
       proposalId,
       source: "indexer",
       sourcePlatform: body.sourcePlatform,

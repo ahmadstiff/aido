@@ -32,10 +32,16 @@ const envSchema = z.object({
   DAO_FACTORY_ADDRESS: optionalString,
   FACTORY_START_BLOCK: optionalBigInt,
   GOVERNOR_BOOTSTRAP_ADDRESSES: z.string().default(""),
+  DAO_NAME: optionalString,
+  DAO_CREATOR: optionalString,
+  DAO_TOKEN_ADDRESS: optionalString,
+  DAO_TIMELOCK_ADDRESS: optionalString,
+  DAO_METADATA_URI: optionalString,
   BACKEND_URL: z.string().url().default("http://localhost:3001"),
   BACKEND_WEBHOOK_PATH: z.string().default("/api/trigger-analysis"),
   BACKEND_DAO_WEBHOOK_PATH: z.string().default("/api/register-dao"),
   INDEXER_SHARED_SECRET: optionalString,
+  DELIVERY_INTERVAL_MS: z.coerce.number().int().nonnegative().default(1200),
   POLLING_INTERVAL_MS: z.coerce.number().int().positive().default(10000),
   STATE_FILE: z.string().default("data/state.json"),
 });
@@ -65,6 +71,15 @@ export const indexerEnv = {
   governorBootstrapAddresses: normalizeAddressList(
     parsed.GOVERNOR_BOOTSTRAP_ADDRESSES,
   ),
+  daoName: parsed.DAO_NAME,
+  daoCreator: parsed.DAO_CREATOR ? getAddress(parsed.DAO_CREATOR) : undefined,
+  daoTokenAddress: parsed.DAO_TOKEN_ADDRESS
+    ? getAddress(parsed.DAO_TOKEN_ADDRESS)
+    : undefined,
+  daoTimelockAddress: parsed.DAO_TIMELOCK_ADDRESS
+    ? getAddress(parsed.DAO_TIMELOCK_ADDRESS)
+    : undefined,
+  daoMetadataUri: parsed.DAO_METADATA_URI,
   backendUrl: parsed.BACKEND_URL.replace(/\/$/, ""),
   backendWebhookPath: parsed.BACKEND_WEBHOOK_PATH.startsWith("/")
     ? parsed.BACKEND_WEBHOOK_PATH
@@ -73,6 +88,7 @@ export const indexerEnv = {
     ? parsed.BACKEND_DAO_WEBHOOK_PATH
     : `/${parsed.BACKEND_DAO_WEBHOOK_PATH}`,
   indexerSharedSecret: parsed.INDEXER_SHARED_SECRET,
+  deliveryIntervalMs: parsed.DELIVERY_INTERVAL_MS,
   pollingIntervalMs: parsed.POLLING_INTERVAL_MS,
   stateFile: path.resolve(process.cwd(), parsed.STATE_FILE),
 } as const;

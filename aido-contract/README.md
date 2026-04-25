@@ -37,6 +37,36 @@ Jadi yang benar-benar onchain di Monad adalah:
 - proposal lifecycle,
 - dan vote execution.
 
+## Current Monad Testnet Deployment
+
+Alamat deployment yang sudah tersedia saat ini:
+
+Core contracts:
+
+- `AidoToken`: `0x32Dfb6F14949d4CdAf4f225D8ad9E02dEdC08545`
+- `AidoDaoRegistry`: `0x134b005958e7505fECe7aC1AC11d0078C6A17246`
+- `AidoDaoFactory`: `0xC37Ee98C30Dca390652a358eE435d21580172382`
+
+Demo DAO:
+
+- `Governor`: `0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f`
+- `Timelock`: `0x8Acb8aC5A12C2ceaE8Da17Df361E24a7fC3988cD`
+
+Seed target modules:
+
+- `TreasuryModule`: `0x8c89795c67174c3B795B2fc9f68126A0638FBb75`
+- `RiskModule`: `0xAc3b77F4592803ADEEB10B6DF94186A467601dc8`
+- `GovernanceModule`: `0x2580c857E60966969b5d94c08F26B78aedB969B1`
+- `OperationsModule`: `0xc2a0A6262fe19B9419C843a181bfEf39CA3b0148`
+- `EmissionsModule`: `0x4797D2559F26d5908d037B5D28223F1934a42297`
+- `GrowthModule`: `0xC869D41d096C2bAAf00011273ce3C5722a3c9286`
+- `PartnershipsModule`: `0x4033f7aF5Cc67d1Bf7A83340C71B280845ee4339`
+
+Catatan:
+
+- Seed module di atas diasumsikan sudah dimiliki `Timelock`.
+- Governor demo di atas adalah kandidat utama untuk pengujian indexer, backend AI, dan auto-vote.
+
 ## Recommended `AidoDaoFactory`
 
 Factory bertugas membuat DAO baru dan mengumumkannya lewat event.
@@ -105,6 +135,19 @@ interface IAidoDaoFactory {
 }
 ```
 
+Checklist implementasi:
+
+- simpan address `registry`
+- simpan implementation governor dan timelock jika memakai clone pattern
+- validasi `token != address(0)`
+- validasi `quorumNumerator > 0`
+- validasi `votingPeriod > 0`
+- deploy atau clone governor
+- deploy atau clone timelock
+- wire governor, timelock, dan token voting
+- panggil `registerDao(...)` ke registry
+- emit `DaoCreated(...)`
+
 ## Recommended `AidoDaoRegistry`
 
 Registry menjadi katalog DAO yang sah agar frontend, backend, dan indexer tidak perlu menebak-nebak contract mana yang harus dianggap sebagai DAO AIDO.
@@ -169,6 +212,14 @@ interface IAidoDaoRegistry {
 }
 ```
 
+Checklist implementasi:
+
+- mapping `governor => DaoInfo`
+- guard agar DAO yang sama tidak bisa diregister dua kali
+- batasi `registerDao(...)` ke factory atau admin yang dipercaya
+- expose getter yang murah dibaca backend/frontend
+- simpan metadata minimum yang dibutuhkan indexer dan dashboard
+
 ## Recommended `AidoGovernorTemplate`
 
 Governor template harus kompatibel dengan kebutuhan indexer dan backend.
@@ -229,6 +280,16 @@ interface IAidoGovernorCompatible {
     function hasVoted(uint256 proposalId, address voter) external view returns (bool);
 }
 ```
+
+Checklist implementasi:
+
+- implement event `ProposalCreated(...)` dengan shape yang kompatibel dengan repo ini
+- implement `castVote(...)`
+- implement `castVoteWithReason(...)`
+- implement `hasVoted(...)`
+- expose snapshot/delegation melalui token voting yang kompatibel
+- pastikan proposal bisa dibuat oleh tokenholder sesuai threshold
+- pastikan governor diarahkan ke timelock untuk execution
 
 ## Recommended Proposal Submission Compatibility
 
@@ -313,6 +374,13 @@ Yang penting:
 
 Untuk hackathon, implementasi timelock standar ala OpenZeppelin sudah cukup cocok.
 
+Checklist implementasi:
+
+- governor menjadi proposer yang sah
+- executor diset sesuai model DAO
+- module target dipindahkan ownership-nya ke timelock
+- admin bootstrap dicabut atau dipersempit setelah setup
+
 ## Recommended Flow
 
 Flow end-to-end yang disarankan:
@@ -396,6 +464,14 @@ Sebelum flow ini bisa dipakai penuh:
 8. Jalankan backend
 9. Isi `AGENT_PRIVATE_KEY` untuk auto-vote
 10. Pastikan agent wallet punya MON untuk gas
+
+Checklist berdasarkan deployment yang sudah ada:
+
+- `AidoDaoRegistry` sudah tersedia di `0x134b005958e7505fECe7aC1AC11d0078C6A17246`
+- `AidoDaoFactory` sudah tersedia di `0xC37Ee98C30Dca390652a358eE435d21580172382`
+- demo governor aktif di `0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f`
+- demo timelock aktif di `0x8Acb8aC5A12C2ceaE8Da17Df361E24a7fC3988cD`
+- seed module address sudah tersedia dan bisa dipakai untuk 30 proposal demo
 
 ## Backend and Indexer Env
 
