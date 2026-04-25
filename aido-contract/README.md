@@ -43,24 +43,24 @@ Alamat deployment yang sudah tersedia saat ini:
 
 Core contracts:
 
-- `AidoToken`: `0x32Dfb6F14949d4CdAf4f225D8ad9E02dEdC08545`
-- `AidoDaoRegistry`: `0x134b005958e7505fECe7aC1AC11d0078C6A17246`
-- `AidoDaoFactory`: `0xC37Ee98C30Dca390652a358eE435d21580172382`
+- `AidoToken`: `0x8a2CF47167EBC346d88B29c69d6C384945B3f63f`
+- `AidoDaoRegistry`: `0xae4Ba05f50DD3080722fea59c8C9CBD4FE22127d`
+- `AidoDaoFactory`: `0x19DfE2f666106E9eA84508FC37FA9725D2A187b6`
 
 Demo DAO:
 
-- `Governor`: `0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f`
-- `Timelock`: `0x8Acb8aC5A12C2ceaE8Da17Df361E24a7fC3988cD`
+- `Governor`: `0x5D5d646a5Fdc86f578aCB9cC8f42C91b0C7b647B`
+- `Timelock`: `0xff512B03fCF978cD183d0635c4Be9FFd9e0647A9`
 
 Seed target modules:
 
-- `TreasuryModule`: `0x8c89795c67174c3B795B2fc9f68126A0638FBb75`
-- `RiskModule`: `0xAc3b77F4592803ADEEB10B6DF94186A467601dc8`
-- `GovernanceModule`: `0x2580c857E60966969b5d94c08F26B78aedB969B1`
-- `OperationsModule`: `0xc2a0A6262fe19B9419C843a181bfEf39CA3b0148`
-- `EmissionsModule`: `0x4797D2559F26d5908d037B5D28223F1934a42297`
-- `GrowthModule`: `0xC869D41d096C2bAAf00011273ce3C5722a3c9286`
-- `PartnershipsModule`: `0x4033f7aF5Cc67d1Bf7A83340C71B280845ee4339`
+- `TreasuryModule`: `0x265Def4579Db17D375042426FDa1f674114AEe23`
+- `RiskModule`: `0x1dF4c3b00cCe33c3Da83473F87B692CCDB932b4a`
+- `GovernanceModule`: `0x14938CFa2713f34486aDC28ec9D999f11d1F427A`
+- `OperationsModule`: `0xff3dea86623abd0827157FA80598d2205C1bF117`
+- `EmissionsModule`: `0xD6d601a326292C9C118cE452d8668e5ca08B9994`
+- `GrowthModule`: `0x52526bFE8BCf86F87a388099737676e5171F8142`
+- `PartnershipsModule`: `0x5586bf0FBBfC3BB0347ebef0EDdD60809a29739A`
 
 Catatan:
 
@@ -467,10 +467,10 @@ Sebelum flow ini bisa dipakai penuh:
 
 Checklist berdasarkan deployment yang sudah ada:
 
-- `AidoDaoRegistry` sudah tersedia di `0x134b005958e7505fECe7aC1AC11d0078C6A17246`
-- `AidoDaoFactory` sudah tersedia di `0xC37Ee98C30Dca390652a358eE435d21580172382`
-- demo governor aktif di `0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f`
-- demo timelock aktif di `0x8Acb8aC5A12C2ceaE8Da17Df361E24a7fC3988cD`
+- `AidoDaoRegistry` sudah tersedia di `0xae4Ba05f50DD3080722fea59c8C9CBD4FE22127d`
+- `AidoDaoFactory` sudah tersedia di `0x19DfE2f666106E9eA84508FC37FA9725D2A187b6`
+- demo governor aktif di `0x5D5d646a5Fdc86f578aCB9cC8f42C91b0C7b647B`
+- demo timelock aktif di `0xff512B03fCF978cD183d0635c4Be9FFd9e0647A9`
 - seed module address sudah tersedia dan bisa dipakai untuk 30 proposal demo
 
 ## Backend and Indexer Env

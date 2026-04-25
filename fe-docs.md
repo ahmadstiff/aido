@@ -44,19 +44,20 @@ Gunakan address ini sebagai referensi implementasi saat ini:
 
 Core contracts:
 
-- `AidoToken`: `0x32Dfb6F14949d4CdAf4f225D8ad9E02dEdC08545`
-- `AidoDaoRegistry`: `0x134b005958e7505fECe7aC1AC11d0078C6A17246`
-- `AidoDaoFactory`: `0xC37Ee98C30Dca390652a358eE435d21580172382`
+- `AidoToken`: `0x8a2CF47167EBC346d88B29c69d6C384945B3f63f`
+- `AidoDaoRegistry`: `0xae4Ba05f50DD3080722fea59c8C9CBD4FE22127d`
+- `AidoDaoFactory`: `0x19DfE2f666106E9eA84508FC37FA9725D2A187b6`
+- `MonadVoterRegistry`: `0x0F3752932c00F7cD471F183b419684D5BbdEA492`
 
 Demo DAO:
 
-- `Governor`: `0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f`
-- `Timelock`: `0x8Acb8aC5A12C2ceaE8Da17Df361E24a7fC3988cD`
+- `Governor`: `0x5D5d646a5Fdc86f578aCB9cC8f42C91b0C7b647B`
+- `Timelock`: `0xff512B03fCF978cD183d0635c4Be9FFd9e0647A9`
 
 Important frontend note:
 
-- file [aido-web/src/lib/contracts.ts](/Users/danuste/Desktop/hackaton/monad/aido/aido-web/src/lib/contracts.ts:1) masih berisi address lama
-- frontend harus diupdate agar memakai address terbaru di atas
+- file [aido-web/src/lib/contracts.ts](/Users/danuste/Desktop/hackaton/monad/aido/aido-web/src/lib/contracts.ts:1) sekarang sudah memuat address terbaru
+- anggap file itu sebagai source of truth frontend untuk deployment aktif
 - untuk data proposal dan DAO, frontend tetap harus mengutamakan backend, bukan hardcoded contract reads
 
 ## 4. Frontend Responsibilities
@@ -177,9 +178,9 @@ Contoh response shape:
 {
   "daos": [
     {
-      "governorAddress": "0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f",
-      "timelockAddress": "0x8Acb8aC5A12C2ceaE8Da17Df361E24a7fC3988cD",
-      "tokenAddress": "0x32Dfb6F14949d4CdAF4f225D8ad9E02dEdC08545",
+      "governorAddress": "0x5D5d646a5Fdc86f578aCB9cC8f42C91b0C7b647B",
+      "timelockAddress": "0xff512B03fCF978cD183d0635c4Be9FFd9e0647A9",
+      "tokenAddress": "0x8a2CF47167EBC346d88B29c69d6C384945B3f63f",
       "creator": "0x42f484f4fad0093543A6EE211da829FF30e777EE",
       "name": "AIDO Demo DAO",
       "metadataUri": "ipfs://aido-demo-dao",
@@ -214,7 +215,7 @@ Query yang direkomendasikan:
 Contoh:
 
 ```bash
-GET /api/proposals?governorAddress=0xd0b2617883e9d925bc581F95cF2d806b8155Dd0f&limit=20
+GET /api/proposals?governorAddress=0x5D5d646a5Fdc86f578aCB9cC8f42C91b0C7b647B&limit=20
 ```
 
 Aturan frontend:
@@ -243,7 +244,7 @@ Format `proposalKey`:
 Contoh:
 
 ```text
-0xd0b2617883e9d925bc581f95cf2d806b8155dd0f:43245944018826288398548221809429345225320582769597971086577082603438335050632
+0x5d5d646a5fdc86f578acb9cc8f42c91b0c7b647b:123456789
 ```
 
 Catatan implementasi:
@@ -298,7 +299,7 @@ Request body minimal:
 
 ```json
 {
-  "proposalId": "0xd0b2617883e9d925bc581f95cf2d806b8155dd0f:43245944018826288398548221809429345225320582769597971086577082603438335050632",
+  "proposalId": "0x5d5d646a5fdc86f578acb9cc8f42c91b0c7b647b:123456789",
   "support": "FOR"
 }
 ```
@@ -311,8 +312,8 @@ Aturan penting:
 
 ```json
 {
-  "proposalKey": "0xd0b2617883e9d925bc581f95cf2d806b8155dd0f:43245944018826288398548221809429345225320582769597971086577082603438335050632",
-  "proposalId": "43245944018826288398548221809429345225320582769597971086577082603438335050632",
+  "proposalKey": "0x5d5d646a5fdc86f578acb9cc8f42c91b0c7b647b:123456789",
+  "proposalId": "123456789",
   "support": "FOR"
 }
 ```
@@ -604,4 +605,3 @@ Untuk frontend AIDO:
 - indexer bekerja di belakang layar
 - proposal identity utama adalah `proposalKey`, bukan `proposalId`
 - halaman detail proposal harus selalu punya opsi `Refresh AI`
-
