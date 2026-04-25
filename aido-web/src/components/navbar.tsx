@@ -10,6 +10,7 @@ export default function Navbar() {
   const links = [
     { href: "/", label: "Dashboard" },
     { href: "/proposals", label: "Proposals" },
+    { href: "/dao/create", label: "Create DAO" },
     { href: "/profile", label: "Profile" },
   ];
 
