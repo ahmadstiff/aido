@@ -15,8 +15,8 @@ export type Proposal = {
   proposalId: bigint;
   proposer: string;
   description: string;
-  voteStart: bigint;
-  voteEnd: bigint;
+  voteStart?: bigint;
+  voteEnd?: bigint;
   analysis?: ProposalAnalysis;
 };
 
@@ -44,8 +44,8 @@ async function loadFromBackend(): Promise<ProposalsResult | null> {
       proposalId: BigInt(p.proposalId),
       proposer: p.proposer ?? "",
       description: p.title ?? p.description,
-      voteStart: BigInt(p.startBlock ?? 0),
-      voteEnd: BigInt(p.endBlock ?? 0),
+      voteStart: p.startBlock ? BigInt(p.startBlock) : undefined,
+      voteEnd: p.endBlock ? BigInt(p.endBlock) : undefined,
       analysis: p.analysis,
     })),
     source: "backend",

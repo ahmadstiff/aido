@@ -240,8 +240,8 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
           <div className="mt-2 flex flex-wrap gap-3 text-xs text-[#A8A3BC]">
             <span>Proposal #{proposal.proposalId.toString()}</span>
             <span>By {shortAddress(proposal.proposer)}</span>
-            <span>Start {proposal.voteStart.toString()}</span>
-            <span>End {proposal.voteEnd.toString()}</span>
+            {proposal.voteStart != null && <span>Start {proposal.voteStart.toString()}</span>}
+            {proposal.voteEnd != null && <span>End {proposal.voteEnd.toString()}</span>}
           </div>
         </div>
         <span
